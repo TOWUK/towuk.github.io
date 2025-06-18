@@ -1,50 +1,143 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Поддержать меня</title>
+  <meta charset="UTF-8" />
+  <title>Поддержать стримера</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- UIkit CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.23.10/dist/css/uikit.min.css"  />
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8f8f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+    }
+
+    .admin-panel {
+      text-align: left;
+    }
+  </style>
 </head>
-<body class="uk-background-muted uk-padding">
+<body>
 
-  <div class="uk-container uk-margin-top uk-card uk-card-default uk-card-body uk-width-1-2@m uk-align-center">
-    <h1 class="uk-heading-small">Поддержите мой стрим ❤️</h1>
+  <div class="container" id="mainContent">
+    <div class="uk-card uk-card-default uk-card-body">
+      <h1 class="uk-heading-small uk-text-center">Поддержите мой стрим ❤️</h1>
 
-    <form action="https://api.yookassa.ru/v3/payments"  method="POST" target="_blank" class="uk-form-stacked">
-      <!-- Это тестовые поля, заменить на реальные данные из YooKassa -->
-      <input type="hidden" name="amount[value]" value="100.00">
-      <input type="hidden" name="amount[currency]" value="RUB">
-      <input type="hidden" name="confirmation[type]" value="redirect">
-      <input type="hidden" name="confirmation[return_url]" value="https://yourdomain.github.io/thanks.html"> 
-      <input type="hidden" name="capture" value="true">
-      <input type="hidden" name="description" value="Пожертвование стримеру">
+      <form action="https://api.yookassa.ru/v3/payments"  method="POST" target="_blank" class="uk-form-stacked">
+        <!-- Эти поля нужно заменить на актуальные значения из YooKassa -->
+        <input type="hidden" name="amount[value]" value="100.00">
+        <input type="hidden" name="amount[currency]" value="RUB">
+        <input type="hidden" name="confirmation[type]" value="redirect">
+        <input type="hidden" name="confirmation[return_url]" value="https://TOWUK.github.io"> 
+        <input type="hidden" name="capture" value="true">
+        <input type="hidden" name="description" value="Пожертвование стримеру">
+        <input type="hidden" name="merchantAccountId" value="YOUR_MERCHANT_ID">
 
-      <div class="uk-margin">
-        <label class="uk-form-label" for="amount">Сумма:</label>
-        <div class="uk-form-controls">
-          <input class="uk-input" id="amount" type="number" min="1" step="0.01" placeholder="Введите сумму" required>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="amount">Сумма:</label>
+          <div class="uk-form-controls">
+            <input class="uk-input" id="amount" name="amountUser" type="number" min="1" step="0.01" placeholder="Введите сумму" required>
+          </div>
         </div>
-      </div>
 
-      <div class="uk-margin">
-        <button class="uk-button uk-button-primary" type="submit">Отправить донат</button>
-      </div>
-    </form>
+        <div class="uk-margin uk-text-center">
+          <button class="uk-button uk-button-primary" type="submit">Отправить донат</button>
+        </div>
+      </form>
+    </div>
   </div>
 
+  <!-- Admin Panel -->
+  <div class="container admin-panel" id="adminPanel" style="display: none;">
+    <div class="uk-card uk-card-default uk-card-body">
+      <h1 class="uk-heading-medium uk-text-center">🔧 Панель управления</h1>
+
+      <ul uk-tab>
+        <li><a href="#">Настройки</a></li>
+        <li><a href="#">Логи</a></li>
+        <li><a href="#">Оверлей</a></li>
+      </ul>
+
+      <ul class="uk-switcher uk-margin">
+        <!-- YooKassa Settings -->
+        <li>
+          <div class="uk-form-stacked">
+            <h3>Настройки YooKassa</h3>
+            <div class="uk-margin">
+              <label class="uk-form-label" for="accountId">Merchant Account ID</label>
+              <div class="uk-form-controls">
+                <input class="uk-input" id="accountId" type="text" placeholder="Ваш Merchant ID">
+              </div>
+            </div>
+            <div class="uk-margin">
+              <label class="uk-form-label" for="secretKey">Secret Key</label>
+              <div class="uk-form-controls">
+                <input class="uk-input" id="secretKey" type="password" placeholder="Ваш Secret Key">
+              </div>
+            </div>
+            <button class="uk-button uk-button-default">Сохранить</button>
+          </div>
+        </li>
+
+        <!-- Logs -->
+        <li>
+          <h3>Логи донатов</h3>
+          <pre class="uk-text-small" style="max-height: 400px; overflow: auto;">
+[LOG] Donat received: Иван - 100р
+[LOG] Donat received: Мария - 250р
+[LOG] Error: Payment failed - timeout
+[LOG] Donat received: Артём - 500р
+          </pre>
+          <button class="uk-button uk-button-default uk-margin-top">Копировать логи</button>
+        </li>
+
+        <!-- Overlay -->
+        <li>
+          <h3>Оверлей для OBS</h3>
+          <p>Используйте этот URL в OBS как браузерный источник:</p>
+          <code class="uk-badge uk-width-1-1 uk-text-break">https://TOWUK.github.io/overlay.html</code> 
+        </li>
+      </ul>
+
+      <div class="uk-margin-top uk-text-center">
+        <button onclick="goBack()" class="uk-button uk-button-secondary">⬅ Назад на главную</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UIkit JS -->
   <script src="https://cdn.jsdelivr.net/npm/uikit@3.23.10/dist/js/uikit.min.js"></script> 
   <script src="https://cdn.jsdelivr.net/npm/uikit@3.23.10/dist/js/uikit-icons.min.js"></script> 
 
   <script>
-    // Ctrl+A -> admin1
+    // Ctrl+A → admin1
     document.addEventListener('keydown', function(e) {
       if (e.key === 'a' && e.ctrlKey) {
         let pass = prompt("Введите пароль для доступа к админке:");
         if (pass === "admin1") {
-          window.location.href = "admin.html";
+          document.getElementById('mainContent').style.display = 'none';
+          document.getElementById('adminPanel').style.display = 'block';
         }
       }
     });
+
+    function goBack() {
+      document.getElementById('adminPanel').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    }
   </script>
 </body>
 </html>
