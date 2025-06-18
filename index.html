@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -45,7 +6,7 @@
     <title>Donation Page</title>
     <!-- Pico CSS for lightweight, modern styling -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-    <!-- YooKassa SDK (optional for mock; required for real payments) -->
+    <!-- YooKassa SDK (included for potential future use) -->
     <script src="https://yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
     <style>
         /* Custom styles for minimalism and animations */
@@ -62,7 +23,7 @@
             padding: 1.5rem;
         }
         .container {
-            max-width: 32rem;
+            max-width: 36rem;
             width: 100%;
             background: white;
             padding: 2rem;
@@ -74,6 +35,11 @@
             color: #1a1a1a;
             text-align: center;
             margin-bottom: 1.5rem;
+        }
+        h2 {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            text-align: center;
         }
         input, textarea, button {
             margin-bottom: 1rem;
@@ -87,7 +53,7 @@
             padding: 1.5rem;
             border-radius: 0.5rem;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-            max-width: 32rem;
+            max-width: 36rem;
             width: 100%;
             text-align: center;
             font-size: 1rem;
@@ -108,6 +74,34 @@
         }
         .hidden {
             display: none;
+        }
+        table {
+            width: 100%;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th {
+            background: #e5e7eb;
+            font-weight: 600;
+        }
+        td {
+            border-bottom: 1px solid #e5e7eb;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+            table {
+                font-size: 0.8rem;
+            }
+            th, td {
+                padding: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -135,6 +129,18 @@
                 <button id="save-settings" type="button">Сохранить</button>
                 <button id="back-to-main" type="button">Назад</button>
             </form>
+            <h2>Последние донаты</h2>
+            <table id="donations-table">
+                <thead>
+                    <tr>
+                        <th>Время</th>
+                        <th>Ник</th>
+                        <th>Сумма (RUB)</th>
+                        <th>Сообщение</th>
+                    </tr>
+                </thead>
+                <tbody id="donations-table-body"></tbody>
+            </table>
         </div>
     </div>
 
@@ -168,9 +174,28 @@
         const overlayNickname = document.getElementById('overlay-nickname');
         const overlayAmount = document.getElementById('overlay-amount');
         const overlayMessage = document.getElementById('overlay-message');
+        const donationsTableBody = document.getElementById('donations-table-body');
 
-        // Check YooKassa SDK Availability
+        // Check YooKassa SDK
         console.log('YooKassa SDK available:', typeof window.YooKassaCheckoutWidget !== 'undefined');
+
+        // Update Donations Table
+        function updateDonationsTable() {
+            donationsTableBody.innerHTML = '';
+            const recentDonations = donations.slice(-10).reverse(); // Last 10 donations
+            recentDonations.forEach(donation => {
+                const row = document.createElement('tr');
+                const date = new Date(donation.timestamp).toLocaleString('ru-RU', { dateStyle: 'short', timeStyle: 'short' });
+                row.innerHTML = `
+                    <td>${date}</td>
+                    <td>${donation.nickname}</td>
+                    <td>${donation.amount.toFixed(2)}</td>
+                    <td>${donation.message}</td>
+                `;
+                donationsTableBody.appendChild(row);
+            });
+            console.log('Donations table updated:', recentDonations);
+        }
 
         // Enable/Disable Donate Button
         function updateDonateButton() {
@@ -190,17 +215,21 @@
         amountInput.addEventListener('input', updateDonateButton);
         messageInput.addEventListener('input', updateDonateButton);
 
-        // Initialize Settings
+        // Initialize Settings and Donations
         shopIdInput.value = settings.shopId;
         secretKeyInput.value = settings.secretKey;
-        console.log('Initial localStorage:', { settings: localStorage.getItem('donation-settings'), donations: localStorage.getItem('donations') });
+        console.log('Initial localStorage:', {
+            settings: localStorage.getItem('donation-settings'),
+            donations: localStorage.getItem('donations')
+        });
         updateDonateButton();
+        updateDonationsTable();
 
         // Save Settings
         saveSettingsBtn.addEventListener('click', () => {
             settings = { shopId: shopIdInput.value.trim(), secretKey: secretKeyInput.value.trim() };
             localStorage.setItem('donation-settings', JSON.stringify(settings));
-            console.log('Settings saved:', settings);
+            console.log('Settings saved:', { shopId: settings.shopId, secretKey: '[hidden]' });
             alert('Настройки сохранены!');
             updateDonateButton();
         });
@@ -216,9 +245,10 @@
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'a') {
                 const password = prompt('Введите пароль для админ-панели:');
-                if (password === 'admin123') { // Replace with secure auth in production
+                if (password === 'admin123') {
                     mainPage.classList.add('hidden');
                     adminPanel.classList.remove('hidden');
+                    updateDonationsTable();
                     console.log('Admin panel accessed');
                 } else {
                     alert('Неверный пароль!');
@@ -236,7 +266,7 @@
             console.log('Donation data:', { nickname, amount, message });
 
             try {
-                // Mock payment processing (for local and testing)
+                // Mock payment for testing (used since no server is available)
                 const payment = { id: `mock-${Date.now()}` };
                 const donation = { id: payment.id, nickname, amount, message, timestamp: Date.now(), shown: false };
                 donations.push(donation);
@@ -249,59 +279,96 @@
                 amountInput.value = '';
                 messageInput.value = '';
                 updateDonateButton();
-                console.log('Form cleared');
+                updateDonationsTable();
+                console.log('Form cleared and donations table updated');
 
                 alert('Платеж имитирован успешно! Донат отобразится в оверлее.');
 
-                /* For real YooKassa integration (hosted environment, e.g., GitHub Pages):
-                   1. Set up a backend server (e.g., Node.js on Heroku/Vercel) to generate payment tokens.
-                   2. Ensure the page is hosted on HTTPS (GitHub Pages provides this).
-                   3. Use real Shop ID and Secret Key from YooKassa dashboard (https://yookassa.ru/developers/using-api/testing).
-                   4. Replace this block with:
-                   if (typeof window.YooKassaCheckoutWidget === 'undefined') {
-                       throw new Error('YooKassa SDK not loaded');
-                   }
-                   const checkout = new window.YooKassaCheckoutWidget({
-                       shopId: settings.shopId,
-                       token: await fetchPaymentToken(amount, nickname, message), // Server call
-                   });
-                   checkout.render('donate-btn');
-                   checkout.on('success', (payment) => {
-                       const donation = { id: payment.id, nickname, amount, message, timestamp: Date.now(), shown: false };
-                       donations.push(donation);
-                       localStorage.setItem('donations', JSON.stringify(donations));
-                       console.log('Real donation saved:', donation);
-                       nicknameInput.value = '';
-                       amountInput.value = '';
-                       messageInput.value = '';
-                       updateDonateButton();
-                       alert('Платеж успешен! Донат отобразится в оверлее.');
-                   });
-                   checkout.on('fail', (error) => {
-                       console.error('YooKassa payment error:', error);
-                       alert('Ошибка платежа: ' + error.message);
-                   });
-                   Example server-side function (Node.js):
-                   async function fetchPaymentToken(amount, nickname, message) {
-                       const response = await fetch('https://api.yookassa.ru/v3/payments', {
-                           method: 'POST',
-                           headers: {
-                               'Authorization': 'Basic ' + btoa(`${settings.shopId}:${settings.secretKey}`),
-                               'Content-Type': 'application/json',
-                               'Idempotency-Key': Math.random().toString(36).substring(2),
-                           },
-                           body: JSON.stringify({
-                               amount: { value: amount.toFixed(2), currency: 'RUB' },
-                               confirmation: { type: 'embedded' },
-                               capture: true,
-                               description: `${nickname}: ${message}`,
-                           }),
-                       });
-                       if (!response.ok) throw new Error('Failed to create payment');
-                       const data = await response.json();
-                       return data.confirmation.confirmation_token;
-                   }
-                   5. Configure CORS on the backend to allow requests from your GitHub Pages domain.
+                /* For real YooKassa integration:
+                   - You need a server to create payment tokens, as GitHub Pages doesn't support server-side logic.
+                   - Set up a backend (e.g., Node.js) on a free hosting service like Render or Railway.
+                   - Example server code (save as server.js):
+                     const express = require('express');
+                     const fetch = require('node-fetch');
+                     const app = express();
+                     app.use(express.json());
+                     app.use((req, res, next) => {
+                         res.header('Access-Control-Allow-Origin', 'https://towuk.github.io');
+                         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+                         next();
+                     });
+                     app.post('/create-payment', async (req, res) => {
+                         try {
+                             const { shopId, secretKey, amount, nickname, message } = req.body;
+                             const response = await fetch('https://api.yookassa.ru/v3/payments', {
+                                 method: 'POST',
+                                 headers: {
+                                     'Authorization': 'Basic ' + Buffer.from(`${shopId}:${secretKey}`).toString('base64'),
+                                     'Content-Type': 'application/json',
+                                     'Idempotency-Key': Math.random().toString(36).substring(2),
+                                 },
+                                 body: JSON.stringify({
+                                     amount: { value: amount.toFixed(2), currency: 'RUB' },
+                                     confirmation: { type: 'embedded' },
+                                     capture: true,
+                                     description: `${nickname}: ${message}`,
+                                 }),
+                             });
+                             if (!response.ok) {
+                                 const errorData = await response.json();
+                                 throw new Error(errorData.description || 'Failed to create payment');
+                             }
+                             const data = await response.json();
+                             res.json({ token: data.confirmation.confirmation_token });
+                         } catch (error) {
+                             res.status(500).json({ error: error.message });
+                         }
+                     });
+                     app.listen(3000);
+                   - Install dependencies: npm init -y; npm install express node-fetch
+                   - Deploy to Render (https://render.com):
+                     1. Create a new Web Service, connect your GitHub repo with server.js.
+                     2. Set runtime to Node.js, start command: node server.js
+                     3. Get the URL (e.g., https://your-app.onrender.com).
+                   - Update the client code to use the server:
+                     async function fetchPaymentToken(amount, nickname, message) {
+                         const response = await fetch('https://your-app.onrender.com/create-payment', {
+                             method: 'POST',
+                             headers: { 'Content-Type': 'application/json' },
+                             body: JSON.stringify({ shopId: settings.shopId, secretKey: settings.secretKey, amount, nickname, message }),
+                         });
+                         if (!response.ok) {
+                             const errorData = await response.json();
+                             throw new Error(errorData.error || 'Failed to create payment');
+                         }
+                         const { token } = await response.json();
+                         return token;
+                     }
+                     if (typeof window.YooKassaCheckoutWidget === 'undefined') {
+                         throw new Error('YooKassa SDK not loaded');
+                     }
+                     const checkout = new window.YooKassaCheckoutWidget({
+                         shopId: settings.shopId,
+                         token: await fetchPaymentToken(amount, nickname, message),
+                     });
+                     checkout.render('donate-btn');
+                     checkout.on('success', (payment) => {
+                         const donation = { id: payment.id, nickname, amount, message, timestamp: Date.now(), shown: false };
+                         donations.push(donation);
+                         localStorage.setItem('donations', JSON.stringify(donations));
+                         console.log('Real donation saved:', donation);
+                         nicknameInput.value = '';
+                         amountInput.value = '';
+                         messageInput.value = '';
+                         updateDonateButton();
+                         updateDonationsTable();
+                         alert('Платеж успешен! Донат отобразится в оверлее.');
+                     });
+                     checkout.on('fail', (error) => {
+                         console.error('YooKassa payment error:', error);
+                         alert('Ошибка платежа: ' + error.message);
+                     });
+                   - Use test Shop ID and Secret Key from YooKassa dashboard: https://yookassa.ru/developers/using-api/testing
                 */
             } catch (error) {
                 console.error('Payment error:', error);
@@ -316,7 +383,7 @@
             if (lastDonation && !lastDonation.shown) {
                 console.log('Displaying donation:', lastDonation);
                 overlayNickname.textContent = lastDonation.nickname;
-                overlayAmount.textContent = `${lastDonation.amount} RUB`;
+                overlayAmount.textContent = `${lastDonation.amount.toFixed(2)} RUB`;
                 overlayMessage.textContent = lastDonation.message;
 
                 donationAlert.classList.remove('hidden');
