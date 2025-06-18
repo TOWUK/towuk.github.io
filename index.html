@@ -36,20 +36,11 @@
     <div class="uk-card uk-card-default uk-card-body">
       <h1 class="uk-heading-small uk-text-center">Поддержите мой стрим ❤️</h1>
 
-      <form action="https://api.yookassa.ru/v3/payments"  method="POST" target="_blank" class="uk-form-stacked">
-        <!-- Эти поля нужно заменить на актуальные значения из YooKassa -->
-        <input type="hidden" name="amount[value]" value="100.00">
-        <input type="hidden" name="amount[currency]" value="RUB">
-        <input type="hidden" name="confirmation[type]" value="redirect">
-        <input type="hidden" name="confirmation[return_url]" value="https://TOWUK.github.io"> 
-        <input type="hidden" name="capture" value="true">
-        <input type="hidden" name="description" value="Пожертвование стримеру">
-        <input type="hidden" name="merchantAccountId" value="YOUR_MERCHANT_ID">
-
+      <form id="donateForm" class="uk-form-stacked">
         <div class="uk-margin">
           <label class="uk-form-label" for="amount">Сумма:</label>
           <div class="uk-form-controls">
-            <input class="uk-input" id="amount" name="amountUser" type="number" min="1" step="0.01" placeholder="Введите сумму" required>
+            <input class="uk-input" id="amount" type="number" min="1" step="0.01" placeholder="Введите сумму" required>
           </div>
         </div>
 
@@ -88,20 +79,17 @@
                 <input class="uk-input" id="secretKey" type="password" placeholder="Ваш Secret Key">
               </div>
             </div>
-            <button class="uk-button uk-button-default">Сохранить</button>
+            <button class="uk-button uk-button-default" onclick="saveSettings()">Сохранить</button>
           </div>
         </li>
 
         <!-- Logs -->
         <li>
           <h3>Логи донатов</h3>
-          <pre class="uk-text-small" style="max-height: 400px; overflow: auto;">
-[LOG] Donat received: Иван - 100р
-[LOG] Donat received: Мария - 250р
-[LOG] Error: Payment failed - timeout
-[LOG] Donat received: Артём - 500р
+          <pre id="logOutput" class="uk-text-small" style="max-height: 400px; overflow: auto;">
+[LOG] Добро пожаловать!
           </pre>
-          <button class="uk-button uk-button-default uk-margin-top">Копировать логи</button>
+          <button class="uk-button uk-button-default uk-margin-top" onclick="copyLogs()">Копировать логи</button>
         </li>
 
         <!-- Overlay -->
@@ -122,7 +110,14 @@
   <script src="https://cdn.jsdelivr.net/npm/uikit@3.23.10/dist/js/uikit.min.js"></script> 
   <script src="https://cdn.jsdelivr.net/npm/uikit@3.23.10/dist/js/uikit-icons.min.js"></script> 
 
+  <!-- YooKassa SDK -->
+  <script src="https://yookassa.ru/checkout-widget/v1/yookassa-checkout-widget.js"></script> 
+
   <script>
+    // Переменные
+    let accountId = '';
+    let secretKey = '';
+
     // Ctrl+A → admin1
     document.addEventListener('keydown', function(e) {
       if (e.key === 'a' && e.ctrlKey) {
@@ -137,6 +132,63 @@
     function goBack() {
       document.getElementById('adminPanel').style.display = 'none';
       document.getElementById('mainContent').style.display = 'block';
+    }
+
+    function saveSettings() {
+      accountId = document.getElementById('accountId').value;
+      secretKey = document.getElementById('secretKey').value;
+      alert("Настройки сохранены!");
+    }
+
+    function copyLogs() {
+      const logs = document.getElementById('logOutput').innerText;
+      navigator.clipboard.writeText(logs).then(() => {
+        alert("Логи скопированы!");
+      });
+    }
+
+    // Обработка формы доната
+    document.getElementById('donateForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const amount = document.getElementById('amount').value;
+
+      if (!accountId || !secretKey) {
+        alert("Заполните настройки YooKassa в админке!");
+        return;
+      }
+
+      const checkout = new window.YooMoneyCheckoutWidget({
+        shopId: accountId,
+        widgetSize: 'm',
+        scid: 123456, // можно хранить в настройках
+        sum: amount,
+        customerEmail: '', // опционально
+        paymentType: 'ac', // любая форма оплаты
+
+        onSuccess: function (payment) {
+          console.log("Платеж успешен", payment);
+          logDonation(`🎉 ${payment.email || 'Аноним'} отправил ${payment.amount.value}₽`);
+          notifyOverlay({ name: payment.email || 'Аноним', amount: payment.amount.value });
+        },
+
+        onFail: function (err) {
+          console.error("Ошибка платежа", err);
+          alert("Ошибка платежа");
+        }
+      });
+
+      checkout.render('donateForm');
+    });
+
+    function logDonation(message) {
+      const timestamp = new Date().toLocaleTimeString();
+      const logEntry = `[${timestamp}] ${message}`;
+      const logBox = document.getElementById('logOutput');
+      logBox.innerText += '\n' + logEntry;
+    }
+
+    function notifyOverlay(data) {
+      localStorage.setItem('last_donation', JSON.stringify(data));
     }
   </script>
 </body>
