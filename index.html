@@ -1,0 +1,349 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Page</title>
+    <!-- Pico CSS for lightweight, modern styling -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <!-- YooKassa SDK (optional for mock; required for real payments) -->
+    <script src="https://yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
+    <style>
+        /* Custom styles for minimalism and animations */
+        body {
+            background: #f5f5f5;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 32rem;
+            width: 100%;
+            background: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: #1a1a1a;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        input, textarea, button {
+            margin-bottom: 1rem;
+        }
+        button {
+            transition: background-color 0.3s ease;
+        }
+        .overlay-alert {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            max-width: 32rem;
+            width: 100%;
+            text-align: center;
+            font-size: 1rem;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+        .fade-out {
+            animation: fadeOut 1s ease-in-out;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Donation Page -->
+    <div id="main-page" class="page">
+        <div class="container">
+            <h1>Поддержать автора</h1>
+            <form>
+                <input id="nickname" type="text" placeholder="Ваш ник" maxlength="20" required aria-label="Никнейм">
+                <input id="amount" type="number" placeholder="Сумма (RUB)" min="1" step="0.01" required aria-label="Сумма">
+                <textarea id="message" placeholder="Сообщение (до 180 символов)" maxlength="180" rows="4" required aria-label="Сообщение"></textarea>
+                <button id="donate-btn" type="button" disabled>Отправить</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="page hidden">
+        <div class="container">
+            <h1>Админ-панель</h1>
+            <form>
+                <input id="shop-id" type="text" placeholder="Shop ID (YooKassa)" required aria-label="Shop ID">
+                <input id="secret-key" type="password" placeholder="Secret Key (YooKassa)" required aria-label="Secret Key">
+                <button id="save-settings" type="button">Сохранить</button>
+                <button id="back-to-main" type="button">Назад</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Overlay Page -->
+    <div id="overlay-page" class="page hidden" style="background: transparent;">
+        <div id="donation-alert" class="overlay-alert hidden">
+            <p id="overlay-nickname" style="font-size: 1.5rem; font-weight: bold;"></p>
+            <p id="overlay-amount" style="font-size: 1.2rem;"></p>
+            <p id="overlay-message" style="font-size: 0.9rem; margin-top: 0.75rem;"></p>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let settings = JSON.parse(localStorage.getItem('donation-settings')) || { shopId: '', secretKey: '' };
+        let donations = JSON.parse(localStorage.getItem('donations')) || [];
+
+        // DOM Elements
+        const mainPage = document.getElementById('main-page');
+        const adminPanel = document.getElementById('admin-panel');
+        const overlayPage = document.getElementById('overlay-page');
+        const donateBtn = document.getElementById('donate-btn');
+        const nicknameInput = document.getElementById('nickname');
+        const amountInput = document.getElementById('amount');
+        const messageInput = document.getElementById('message');
+        const shopIdInput = document.getElementById('shop-id');
+        const secretKeyInput = document.getElementById('secret-key');
+        const saveSettingsBtn = document.getElementById('save-settings');
+        const backToMainBtn = document.getElementById('back-to-main');
+        const donationAlert = document.getElementById('donation-alert');
+        const overlayNickname = document.getElementById('overlay-nickname');
+        const overlayAmount = document.getElementById('overlay-amount');
+        const overlayMessage = document.getElementById('overlay-message');
+
+        // Check YooKassa SDK Availability
+        console.log('YooKassa SDK available:', typeof window.YooKassaCheckoutWidget !== 'undefined');
+
+        // Enable/Disable Donate Button
+        function updateDonateButton() {
+            const hasSettings = settings.shopId && settings.secretKey;
+            const hasInputs = nicknameInput.value.trim() && amountInput.value > 0 && messageInput.value.trim();
+            console.log('Settings:', { shopId: settings.shopId, secretKey: settings.secretKey ? '[hidden]' : '' });
+            console.log('Inputs:', {
+                nickname: nicknameInput.value.trim(),
+                amount: amountInput.value,
+                message: messageInput.value.trim(),
+                valid: hasInputs
+            });
+            donateBtn.disabled = !(hasSettings && hasInputs);
+        }
+
+        nicknameInput.addEventListener('input', updateDonateButton);
+        amountInput.addEventListener('input', updateDonateButton);
+        messageInput.addEventListener('input', updateDonateButton);
+
+        // Initialize Settings
+        shopIdInput.value = settings.shopId;
+        secretKeyInput.value = settings.secretKey;
+        console.log('Initial localStorage:', { settings: localStorage.getItem('donation-settings'), donations: localStorage.getItem('donations') });
+        updateDonateButton();
+
+        // Save Settings
+        saveSettingsBtn.addEventListener('click', () => {
+            settings = { shopId: shopIdInput.value.trim(), secretKey: secretKeyInput.value.trim() };
+            localStorage.setItem('donation-settings', JSON.stringify(settings));
+            console.log('Settings saved:', settings);
+            alert('Настройки сохранены!');
+            updateDonateButton();
+        });
+
+        // Navigation
+        backToMainBtn.addEventListener('click', () => {
+            adminPanel.classList.add('hidden');
+            mainPage.classList.remove('hidden');
+            console.log('Navigated back to main page');
+        });
+
+        // Access Admin Panel
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'a') {
+                const password = prompt('Введите пароль для админ-панели:');
+                if (password === 'admin123') { // Replace with secure auth in production
+                    mainPage.classList.add('hidden');
+                    adminPanel.classList.remove('hidden');
+                    console.log('Admin panel accessed');
+                } else {
+                    alert('Неверный пароль!');
+                    console.log('Admin access denied: incorrect password');
+                }
+            }
+        });
+
+        // Donation Handler
+        donateBtn.addEventListener('click', () => {
+            console.log('Donate button clicked');
+            const amount = parseFloat(amountInput.value);
+            const nickname = nicknameInput.value.trim();
+            const message = messageInput.value.trim();
+            console.log('Donation data:', { nickname, amount, message });
+
+            try {
+                // Mock payment processing (for local and testing)
+                const payment = { id: `mock-${Date.now()}` };
+                const donation = { id: payment.id, nickname, amount, message, timestamp: Date.now(), shown: false };
+                donations.push(donation);
+                localStorage.setItem('donations', JSON.stringify(donations));
+                console.log('Donation saved:', donation);
+                console.log('Current donations:', donations);
+
+                // Clear inputs
+                nicknameInput.value = '';
+                amountInput.value = '';
+                messageInput.value = '';
+                updateDonateButton();
+                console.log('Form cleared');
+
+                alert('Платеж имитирован успешно! Донат отобразится в оверлее.');
+
+                /* For real YooKassa integration (hosted environment, e.g., GitHub Pages):
+                   1. Set up a backend server (e.g., Node.js on Heroku/Vercel) to generate payment tokens.
+                   2. Ensure the page is hosted on HTTPS (GitHub Pages provides this).
+                   3. Use real Shop ID and Secret Key from YooKassa dashboard (https://yookassa.ru/developers/using-api/testing).
+                   4. Replace this block with:
+                   if (typeof window.YooKassaCheckoutWidget === 'undefined') {
+                       throw new Error('YooKassa SDK not loaded');
+                   }
+                   const checkout = new window.YooKassaCheckoutWidget({
+                       shopId: settings.shopId,
+                       token: await fetchPaymentToken(amount, nickname, message), // Server call
+                   });
+                   checkout.render('donate-btn');
+                   checkout.on('success', (payment) => {
+                       const donation = { id: payment.id, nickname, amount, message, timestamp: Date.now(), shown: false };
+                       donations.push(donation);
+                       localStorage.setItem('donations', JSON.stringify(donations));
+                       console.log('Real donation saved:', donation);
+                       nicknameInput.value = '';
+                       amountInput.value = '';
+                       messageInput.value = '';
+                       updateDonateButton();
+                       alert('Платеж успешен! Донат отобразится в оверлее.');
+                   });
+                   checkout.on('fail', (error) => {
+                       console.error('YooKassa payment error:', error);
+                       alert('Ошибка платежа: ' + error.message);
+                   });
+                   Example server-side function (Node.js):
+                   async function fetchPaymentToken(amount, nickname, message) {
+                       const response = await fetch('https://api.yookassa.ru/v3/payments', {
+                           method: 'POST',
+                           headers: {
+                               'Authorization': 'Basic ' + btoa(`${settings.shopId}:${settings.secretKey}`),
+                               'Content-Type': 'application/json',
+                               'Idempotency-Key': Math.random().toString(36).substring(2),
+                           },
+                           body: JSON.stringify({
+                               amount: { value: amount.toFixed(2), currency: 'RUB' },
+                               confirmation: { type: 'embedded' },
+                               capture: true,
+                               description: `${nickname}: ${message}`,
+                           }),
+                       });
+                       if (!response.ok) throw new Error('Failed to create payment');
+                       const data = await response.json();
+                       return data.confirmation.confirmation_token;
+                   }
+                   5. Configure CORS on the backend to allow requests from your GitHub Pages domain.
+                */
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('Ошибка при обработке доната: ' + error.message);
+            }
+        });
+
+        // Overlay Logic
+        function checkForNewDonations() {
+            console.log('Checking for new donations:', donations.length);
+            const lastDonation = donations[donations.length - 1];
+            if (lastDonation && !lastDonation.shown) {
+                console.log('Displaying donation:', lastDonation);
+                overlayNickname.textContent = lastDonation.nickname;
+                overlayAmount.textContent = `${lastDonation.amount} RUB`;
+                overlayMessage.textContent = lastDonation.message;
+
+                donationAlert.classList.remove('hidden');
+                donationAlert.classList.add('fade-in');
+
+                setTimeout(() => {
+                    donationAlert.classList.remove('fade-in');
+                    donationAlert.classList.add('fade-out');
+                    setTimeout(() => {
+                        donationAlert.classList.add('hidden');
+                        donationAlert.classList.remove('fade-out');
+                        lastDonation.shown = true;
+                        localStorage.setItem('donations', JSON.stringify(donations));
+                        console.log('Donation marked as shown:', lastDonation);
+                    }, 1000);
+                }, 15000);
+            }
+        }
+
+        // Simulate Overlay Page Load
+        if (window.location.hash === '#overlay') {
+            mainPage.classList.add('hidden');
+            adminPanel.classList.add('hidden');
+            overlayPage.classList.remove('hidden');
+            console.log('Overlay page loaded');
+            setInterval(checkForNewDonations, 1000);
+        }
+    </script>
+</body>
+</html>
