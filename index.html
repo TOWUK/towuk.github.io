@@ -1,195 +1,276 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>Поддержать стримера</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TOWUK / Тошик - официальная страница</title>
+    
+    <!-- Подключение шрифтов -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========== НАСТРОЙКИ ========== */
+        :root {
+            /* Общие настройки */
+            --bg-color: #000000;
+            
+            /* Настройки аватарки */
+            --avatar-size: clamp(120px, 30vw, 200px);
+            --avatar-border: 3px solid #ffffff;
+            --avatar-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            
+            /* Настройки заголовка */
+            --title-font: 'Jost', sans-serif;
+            --title-color: #ffffff;
+            --title-size: clamp(1.8rem, 6vw, 2.8rem);
+            --title-weight: 700;
+            --title-spacing: 2px;
+            --title-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            
+            /* Настройки описания */
+            --desc-font: 'Jost', sans-serif;
+            --desc-color: #e0e0e0;
+            --desc-size: clamp(1rem, 3vw, 1.3rem);
+            --desc-weight: 500;
+            --desc-line-height: 1.6;
+            
+            /* Общие настройки кнопок */
+            --btn-font: 'Jost', sans-serif;
+            --btn-size: clamp(0.9rem, 3vw, 1.2rem);
+            --btn-weight: 600;
+            --btn-radius: 8px;
+            --btn-padding: 12px 25px;
+            --btn-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            --btn-transition: all 0.3s ease;
+            --mobile-btn-width: 220px;
+            
+            /* Индивидуальные настройки кнопок */
+            --tg-text: #ffffff;
+            --tg-bg: #28a8e9;
+            --tg-hover-text: #28a8e9;
+            --tg-hover-bg: #ffffff;
+            --tg-border: 2px solid #28a8e9;
+            
+            --vk-text: #ffffff;
+            --vk-bg: #2787f5;
+            --vk-hover-text: #2787f5;
+            --vk-hover-bg: #ffffff;
+            --vk-border: 2px solid #2787f5;
+            
+            --donate-text: #000000;
+            --donate-bg: #ffd700;
+            --donate-hover-text: #ffd700;
+            --donate-hover-bg: #000000;
+            --donate-border: 2px solid #ffd700;
+            
+            /* Отступы */
+            --section-gap: clamp(20px, 5vw, 40px);
+            --element-gap: clamp(15px, 4vw, 25px);
+        }
 
-  <!-- UIkit CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.23.10/dist/css/uikit.min.css"  />
+        /* ========== БАЗОВЫЕ СТИЛИ ========== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-color);
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: var(--title-font);
+            padding: 20px;
+        }
 
-  <style>
-    body {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #f8f8f8;
-      margin: 0;
-      padding: 0;
-    }
+        /* ========== КОНТЕЙНЕР ========== */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: var(--section-gap);
+            padding: 20px;
+        }
 
-    .container {
-      width: 100%;
-      max-width: 600px;
-      padding: 20px;
-    }
+        /* ========== АВАТАРКА ========== */
+        .avatar {
+            width: var(--avatar-size);
+            height: var(--avatar-size);
+            border-radius: 50%;
+            object-fit: cover;
+            border: var(--avatar-border);
+            box-shadow: var(--avatar-shadow);
+        }
 
-    .admin-panel {
-      text-align: left;
-    }
-  </style>
+        /* ========== ЗАГОЛОВОК ========== */
+        .title {
+            font-family: var(--title-font);
+            color: var(--title-color);
+            font-size: var(--title-size);
+            font-weight: var(--title-weight);
+            letter-spacing: var(--title-spacing);
+            text-transform: uppercase;
+            line-height: 1.2;
+            text-shadow: var(--title-shadow);
+            margin-bottom: var(--element-gap);
+            white-space: nowrap; /* Запрет переноса на новую строку */
+            overflow: hidden; /* Обрезка если не помещается */
+            text-overflow: ellipsis; /* Многоточие если не помещается */
+            max-width: 100%; /* Ограничение по ширине контейнера */
+            padding: 0 10px; /* Отступы по бокам */
+        }
+
+        /* ========== ОПИСАНИЕ ========== */
+        .description {
+            font-family: var(--desc-font);
+            color: var(--desc-color);
+            font-size: var(--desc-size);
+            font-weight: var(--desc-weight);
+            line-height: var(--desc-line-height);
+            max-width: 600px;
+            margin-bottom: var(--element-gap);
+            word-break: break-word;
+        }
+
+        /* ========== ГРУППЫ КНОПОК ========== */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--element-gap);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Верхняя группа (одна кнопка) */
+        .top-buttons {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Нижняя группа (две кнопки) */
+        .bottom-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--element-gap);
+            width: 100%;
+        }
+
+        /* ========== КНОПКИ ========== */
+        .button {
+            font-family: var(--btn-font);
+            font-size: var(--btn-size);
+            font-weight: var(--btn-weight);
+            border-radius: var(--btn-radius);
+            padding: var(--btn-padding);
+            text-decoration: none;
+            transition: var(--btn-transition);
+            box-shadow: var(--btn-shadow);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Кнопка Donate (верхняя) */
+        .button-donate {
+            color: var(--donate-text);
+            background-color: var(--donate-bg);
+            border: var(--donate-border);
+            width: 100%;
+            /*max-width: 300px;*/ 
+        }
+        .button-donate:hover {
+            color: var(--donate-hover-text);
+            background-color: var(--donate-hover-bg);
+            transform: translateY(-2px);
+        }
+
+        /* Кнопка Telegram */
+        .button-tg {
+            color: var(--tg-text);
+            background-color: var(--tg-bg);
+            border: var(--tg-border);
+            flex: 1;
+            min-width: min(160px, 40vw);
+        }
+
+        /* Кнопка VK */
+        .button-vk {
+            color: var(--vk-text);
+            background-color: var(--vk-bg);
+            border: var(--vk-border);
+            flex: 1;
+            min-width: min(160px, 40vw);
+        }
+
+        /* Общие hover-эффекты */
+        .button-tg:hover,
+        .button-vk:hover {
+            color: var(--tg-hover-text);
+            background-color: var(--tg-hover-bg);
+            transform: translateY(-2px);
+        }
+
+        /* ========== АДАПТИВНОСТЬ ========== */
+        @media (max-width: 480px) {
+            .button-group {
+                align-items: center;
+            }
+            
+            /* Все кнопки одинаковой ширины на мобильных */
+            .button-donate,
+            .button-tg,
+            .button-vk {
+                width: var(--mobile-btn-width);
+                max-width: 100%;
+                flex: 0 0 auto;
+            }
+            
+            .bottom-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: var(--element-gap);
+            }
+            
+            /* Адаптация заголовка для очень узких экранов */
+            .title {
+                font-size: clamp(1.5rem, 7vw, 1.8rem);
+                padding: 0 5px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <div class="container" id="mainContent">
-    <div class="uk-card uk-card-default uk-card-body">
-      <h1 class="uk-heading-small uk-text-center">Поддержите мой стрим ❤️</h1>
-
-      <form id="donateForm" class="uk-form-stacked">
-        <div class="uk-margin">
-          <label class="uk-form-label" for="amount">Сумма:</label>
-          <div class="uk-form-controls">
-            <input class="uk-input" id="amount" type="number" min="1" step="0.01" placeholder="Введите сумму" required>
-          </div>
-        </div>
-
-        <div class="uk-margin uk-text-center">
-          <button class="uk-button uk-button-primary" type="submit">Отправить донат</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Admin Panel -->
-  <div class="container admin-panel" id="adminPanel" style="display: none;">
-    <div class="uk-card uk-card-default uk-card-body">
-      <h1 class="uk-heading-medium uk-text-center">🔧 Панель управления</h1>
-
-      <ul uk-tab>
-        <li><a href="#">Настройки</a></li>
-        <li><a href="#">Логи</a></li>
-        <li><a href="#">Оверлей</a></li>
-      </ul>
-
-      <ul class="uk-switcher uk-margin">
-        <!-- YooKassa Settings -->
-        <li>
-          <div class="uk-form-stacked">
-            <h3>Настройки YooKassa</h3>
-            <div class="uk-margin">
-              <label class="uk-form-label" for="accountId">Merchant Account ID</label>
-              <div class="uk-form-controls">
-                <input class="uk-input" id="accountId" type="text" placeholder="Ваш Merchant ID">
-              </div>
+    <div class="container">
+        <img src="avatar.jpg" alt="TOWUK / Тошик" class="avatar">
+        <h1 class="title">TOWUK / ТОШИК</h1>
+        <p class="description">
+            Стример и просто чиловый парень, любитель хорошо провести время и выпить парочку банок сладкого пивка
+        </p>
+        
+        <div class="button-group">
+            <!-- Верхняя кнопка (Donate) -->
+            <div class="top-buttons">
+                <a href="https://donate.stream/towuk" class="button button-donate" rel="noopener">Donate.stream</a>
             </div>
-            <div class="uk-margin">
-              <label class="uk-form-label" for="secretKey">Secret Key</label>
-              <div class="uk-form-controls">
-                <input class="uk-input" id="secretKey" type="password" placeholder="Ваш Secret Key">
-              </div>
+            
+            <!-- Нижние кнопки (Telegram и VK) -->
+            <div class="bottom-buttons">
+                <a href="https://t.me/TOWUKru" class="button button-tg" rel="noopener">Telegram</a>
+                <a href="https://live.vkvideo.ru/towuk" class="button button-vk" rel="noopener">VK video live</a>
             </div>
-            <button class="uk-button uk-button-default" onclick="saveSettings()">Сохранить</button>
-          </div>
-        </li>
-
-        <!-- Logs -->
-        <li>
-          <h3>Логи донатов</h3>
-          <pre id="logOutput" class="uk-text-small" style="max-height: 400px; overflow: auto;">
-[LOG] Добро пожаловать!
-          </pre>
-          <button class="uk-button uk-button-default uk-margin-top" onclick="copyLogs()">Копировать логи</button>
-        </li>
-
-        <!-- Overlay -->
-        <li>
-          <h3>Оверлей для OBS</h3>
-          <p>Используйте этот URL в OBS как браузерный источник:</p>
-          <code class="uk-badge uk-width-1-1 uk-text-break">https://TOWUK.github.io/overlay.html</code> 
-        </li>
-      </ul>
-
-      <div class="uk-margin-top uk-text-center">
-        <button onclick="goBack()" class="uk-button uk-button-secondary">⬅ Назад на главную</button>
-      </div>
+        </div>
     </div>
-  </div>
-
-  <!-- UIkit JS -->
-  <script src="https://cdn.jsdelivr.net/npm/uikit@3.23.10/dist/js/uikit.min.js"></script> 
-  <script src="https://cdn.jsdelivr.net/npm/uikit@3.23.10/dist/js/uikit-icons.min.js"></script> 
-
-  <!-- YooKassa SDK -->
-  <script src="https://yookassa.ru/checkout-widget/v1/yookassa-checkout-widget.js"></script> 
-
-  <script>
-    // Переменные
-    let accountId = '';
-    let secretKey = '';
-
-    // Ctrl+A → admin1
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'a' && e.ctrlKey) {
-        let pass = prompt("Введите пароль для доступа к админке:");
-        if (pass === "admin1") {
-          document.getElementById('mainContent').style.display = 'none';
-          document.getElementById('adminPanel').style.display = 'block';
-        }
-      }
-    });
-
-    function goBack() {
-      document.getElementById('adminPanel').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'block';
-    }
-
-    function saveSettings() {
-      accountId = document.getElementById('accountId').value;
-      secretKey = document.getElementById('secretKey').value;
-      alert("Настройки сохранены!");
-    }
-
-    function copyLogs() {
-      const logs = document.getElementById('logOutput').innerText;
-      navigator.clipboard.writeText(logs).then(() => {
-        alert("Логи скопированы!");
-      });
-    }
-
-    // Обработка формы доната
-    document.getElementById('donateForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const amount = document.getElementById('amount').value;
-
-      if (!accountId || !secretKey) {
-        alert("Заполните настройки YooKassa в админке!");
-        return;
-      }
-
-      const checkout = new window.YooMoneyCheckoutWidget({
-        shopId: accountId,
-        widgetSize: 'm',
-        scid: 123456, // можно хранить в настройках
-        sum: amount,
-        customerEmail: '', // опционально
-        paymentType: 'ac', // любая форма оплаты
-
-        onSuccess: function (payment) {
-          console.log("Платеж успешен", payment);
-          logDonation(`🎉 ${payment.email || 'Аноним'} отправил ${payment.amount.value}₽`);
-          notifyOverlay({ name: payment.email || 'Аноним', amount: payment.amount.value });
-        },
-
-        onFail: function (err) {
-          console.error("Ошибка платежа", err);
-          alert("Ошибка платежа");
-        }
-      });
-
-      checkout.render('donateForm');
-    });
-
-    function logDonation(message) {
-      const timestamp = new Date().toLocaleTimeString();
-      const logEntry = `[${timestamp}] ${message}`;
-      const logBox = document.getElementById('logOutput');
-      logBox.innerText += '\n' + logEntry;
-    }
-
-    function notifyOverlay(data) {
-      localStorage.setItem('last_donation', JSON.stringify(data));
-    }
-  </script>
 </body>
 </html>
