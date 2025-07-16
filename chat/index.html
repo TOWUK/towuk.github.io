@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат оверлей</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: transparent;
+        }
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        #iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="overlay">
+        <iframe id="iframe" src="https://live.vkvideo.ru/towuk/only-chat" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const iframe = document.getElementById('iframe');
+            
+            function injectCSS() {
+                const css = `
+                    .StreamChatTopPanel_root_EKZTW,
+                    .ChatPublisher_root_xCqwT,
+                    .ChatSystemMessage_root_vnvlH,
+                    .ChatFooter_root_CsObC {
+                        display: none !important;
+                    }
+                    .ChatMessage_root_UHMEJ {
+                        border: unset !important;
+                        border-radius: unset !important;
+                        font-weight: 900 !important;
+                        padding: unset !important;
+                    }
+                    body, .Chat_root__cOk0 {
+                        background-color: rgba(0, 0, 0, 0) !important;
+                    }
+                `;
+                
+                try {
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    const style = doc.createElement('style');
+                    style.type = 'text/css';
+                    style.appendChild(doc.createTextNode(css));
+                    doc.head.appendChild(style);
+                } catch(e) {
+                    console.log('Ожидание загрузки iframe...');
+                    setTimeout(injectCSS, 100);
+                }
+            }
+
+            iframe.onload = injectCSS;
+            
+            function resize() {
+                iframe.style.width = window.innerWidth + 'px';
+                iframe.style.height = window.innerHeight + 'px';
+            }
+            
+            window.addEventListener('resize', resize);
+            resize();
+        });
+    </script>
+</body>
+</html>
