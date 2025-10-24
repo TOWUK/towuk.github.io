@@ -21,7 +21,16 @@
             margin-bottom: 1rem;
         }
         .description {
-            margin-bottom: 2rem;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+        }
+        .buttons {
+            margin-top: 2rem;
+        }
+        .spoiler {
+            color: #000;
+        }
+        .spoiler:hover {
             color: #ccc;
         }
         .button {
@@ -43,9 +52,14 @@
     <div>
         <h1 class="title">Моды для сервера</h1>
         <p class="description">Для тех кто желает реально пообщаться</p>
-        <div>
-            <a href="https://github.com/henkelmax/simple-voice-chat?tab=readme-ov-file#downloads" class="button">ВОЙСЧАТ</a>
-            <a href="https://github.com/DimasKama/Webcam?tab=readme-ov-file#downloads" class="button">ВЕБКАМ</a>
+        <p class="description">
+            Для работы модов нужен 
+            <a href="https://modrinth.com/mod/fabric-api/versions?g=1.21.10" class="spoiler">Fabric API</a> и 
+            <a href="https://modrinth.com/mod/cloth-config/versions?g=1.21.10&l=fabric" class="spoiler">Cloth Config API</a>
+        </p>
+        <div class="buttons">
+            <a href="https://modrinth.com/plugin/simple-voice-chat/versions?g=1.21.10&l=fabric" class="button">ВОЙС</a>
+            <a href="https://modrinth.com/plugin/webcam-mod/versions?g=1.21.10&l=fabric" class="button">ВЕБКАМ</a>
         </div>
     </div>
 </body>
