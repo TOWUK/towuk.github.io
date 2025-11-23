@@ -3,49 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOWUK / Тошик - Стример</title>
-    <meta name="description" content="TOWUK / Тошик: Стример из СПб и Москвы. IRL и игровые стримы по Minecraft, CS2 и Rust">
+    <title>TOWUK / Тошик - Стример из СПб и Москвы</title>
+    <meta name="description" content="TOWUK / Тошик - Стример из СПб и Москвы. IRL и игровые стримы: Minecraft, CS2, Rust">
+    <meta name="keywords" content="TOWUK, Тошик, стример, Minecraft, CS2, Rust, IRL стримы, игровые стримы">
+    <meta name="author" content="TOWUK">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://towuk.ru/">
     <meta property="og:title" content="TOWUK / Тошик - Стример">
-    <meta property="og:description" content="Стример из СПб и Москвы. IRL и игровые стримы: Minecraft, CS2, Rust">
-    <meta property="og:image" content="avatar.webp">
-    <link rel="icon" href="avatar.webp" type="image/webp">
+    <meta property="og:description" content="IRL и игровые стримы: Minecraft, CS2, Rust">
+    <meta property="og:image" content="https://towuk.ru/avatar.webp">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://towuk.ru/">
+    <meta property="twitter:title" content="TOWUK / Тошик - Стример">
+    <meta property="twitter:description" content="IRL и игровые стримы: Minecraft, CS2, Rust">
+    <meta property="twitter:image" content="https://towuk.ru/avatar.webp">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/webp" href="avatar.webp">
+    
     <style>
-        :root { --bg: #000; --text: #fff; --gap: 0.8rem; --tg: #08c; --donate: #fa0; --vk: #07f; --kick: #0a0; --yt: #f00;}
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { overflow: hidden; height: 100%; }
-        body { background: var(--bg); color: var(--text); font-family: Arial; min-height: 100vh; display: grid; place-items: center; padding: 20px; }
-        .card { text-align: center; width: 100%; max-width: 450px; }
-        .avatar { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; margin-bottom: 1.5rem; }
-        .name { font-weight: 900; font-size: 1.8rem; margin-bottom: 0.8rem; }
-        .description { margin-bottom: 2rem; line-height: 1.5; font-size: 1.1rem; }
-        .buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); }
-        .btn { height: 3rem; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border-radius: 10px; font-weight: 900; font-size: 1rem; padding: 0 1rem; transition: opacity 0.2s; }
-        .btn:hover { opacity: 0.8; }
-        @media (max-width: 480px) { 
-            .buttons { grid-template-columns: repeat(2, 1fr); } 
-            .btn { font-size: 0.95rem; height: 2.8rem; }
-            .avatar { width: 130px; height: 130px; margin-bottom: 1.2rem; }
-            .name { font-size: 1.6rem; }
-            .description { font-size: 1rem; margin-bottom: 1.8rem; }
+        
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: system-ui, sans-serif;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 10px;
+        }
+        
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background: url('avatar.webp') center/cover;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .desc {
+            color: #aaa;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        
+        .links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .btn {
+            color: #fff;
+            padding: 12px 8px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            text-shadow: 1px 1px 2px #000;
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            border: 2px solid transparent;
+            border-bottom: 4px solid transparent;
+            min-height: 45px;
+        }
+        
+        .btn:hover {
+            transform: translateY(1px);
+            filter: brightness(1.1);
+            border-bottom-width: 3px;
+        }
+        
+        .btn:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Цвета кнопок согласно платформам */
+        .telegram { background: #0088cc; border-color: #006699; }
+        .vk-video { background: #0077FF; border-color: #0055CC; }
+        .kick { background: #53FC18; border-color: #3BC000; }
+        .youtube { background: #FF0000; border-color: #CC0000; }
+        .wtv { background: #9146FF; border-color: #7B2EFF; }
+        .donate { background: #FF6B00; border-color: #E55A00; }
+        .tbank { background: #FFDD2D; border-color: #FFCC00; }
+        
+        /* Адаптивность */
+        @media (max-width: 480px) {
+            .container { max-width: 100%; }
+            .avatar { width: 90px; height: 90px; }
+            h1 { font-size: 1.3rem; }
+            .desc { font-size: 0.9rem; margin-bottom: 20px; }
+            .btn { padding: 10px 6px; font-size: 0.8rem; min-height: 40px; }
+        }
+        
+        @media (min-width: 768px) {
+            .container { max-width: 450px; }
+            .avatar { width: 110px; height: 110px; }
+            h1 { font-size: 1.6rem; }
+            .btn { padding: 14px 10px; font-size: 0.9rem; min-height: 50px; }
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <img src="avatar.webp" alt="TOWUK / Тошик" class="avatar" loading="lazy" width="140" height="140">
-        <div class="description">
-            <div class="name">TOWUK / Тошик</div>
-            <div>Стример из СПб и Москвы</div>
-            <div>IRL и игровые стримы</div>
-            <div>Minecraft • CS2 • Rust</div>
-        </div>
-        <div class="buttons">
-            <a href="https://t.me/TOWUKru" class="btn" style="background: var(--tg)">Телеграм</a>
-            <a href="https://donate.stream/towuk" class="btn" style="background: var(--donate)">Донат</a>
-            <a href="https://www.tbank.ru/rm/r_ymcelpRvQZ.sQXGyReXPX/DfvUH71354/" class="btn" style="background: var(--donate)">Т-Банк</a>
-            <a href="https://live.vkvideo.ru/towuk" class="btn" style="background: var(--vk)">Вк Лайв</a>
-            <a href="https://kick.com/towuk" class="btn" style="background: var(--kick)">Кик</a>
-            <a href="https://youtube.com/TOWUK" class="btn" style="background: var(--yt)">Ютуб</a>
+    <div class="container">
+        <div class="avatar"></div>
+        <h1>TOWUK / Тошик</h1>
+        <p class="desc">
+            Стример из СПб и Москвы<br>
+            IRL и игровые стримы<br>
+            Minecraft • CS2 • Rust
+        </p>
+        <div class="links">
+            <a href="#" class="btn telegram">TELEGRAM</a>
+            <a href="#" class="btn vk-video">VK VIDEO LIVE</a>
+            <a href="#" class="btn kick">KICK</a>
+            <a href="#" class="btn youtube">YOUTUBE</a>
+            <a href="#" class="btn wtv">W TV</a>
+            <a href="#" class="btn donate">Донат</a>
+            <a href="#" class="btn tbank">Т-Банк</a>
         </div>
     </div>
 </body>

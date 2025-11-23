@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOWUK / Тошик - Стример</title>
+    <meta name="description" content="TOWUK / Тошик: Стример из СПб и Москвы. IRL и игровые стримы по Minecraft, CS2 и Rust">
+    <meta property="og:title" content="TOWUK / Тошик - Стример">
+    <meta property="og:description" content="Стример из СПб и Москвы. IRL и игровые стримы: Minecraft, CS2, Rust">
+    <meta property="og:image" content="avatar.webp">
+    <link rel="icon" href="avatar.webp" type="image/webp">
+    <style>
+        :root { --bg: #000; --text: #fff; --gap: 0.8rem; --tg: #08c; --donate: #fa0; --vk: #07f; --kick: #0a0; --yt: #f00;}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { overflow: hidden; height: 100%; }
+        body { background: var(--bg); color: var(--text); font-family: Arial; min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+        .card { text-align: center; width: 100%; max-width: 450px; }
+        .avatar { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; margin-bottom: 1.5rem; }
+        .name { font-weight: 900; font-size: 1.8rem; margin-bottom: 0.8rem; }
+        .description { margin-bottom: 2rem; line-height: 1.5; font-size: 1.1rem; }
+        .buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); }
+        .btn { height: 3rem; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; border-radius: 10px; font-weight: 900; font-size: 1rem; padding: 0 1rem; transition: opacity 0.2s; }
+        .btn:hover { opacity: 0.8; }
+        @media (max-width: 480px) { 
+            .buttons { grid-template-columns: repeat(2, 1fr); } 
+            .btn { font-size: 0.95rem; height: 2.8rem; }
+            .avatar { width: 130px; height: 130px; margin-bottom: 1.2rem; }
+            .name { font-size: 1.6rem; }
+            .description { font-size: 1rem; margin-bottom: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="avatar.webp" alt="TOWUK / Тошик" class="avatar" loading="lazy" width="140" height="140">
+        <div class="description">
+            <div class="name">TOWUK / Тошик</div>
+            <div>Стример из СПб и Москвы</div>
+            <div>IRL и игровые стримы</div>
+            <div>Minecraft • CS2 • Rust</div>
+        </div>
+        <div class="buttons">
+            <a href="https://t.me/TOWUKru" class="btn" style="background: var(--tg)">Телеграм</a>
+            <a href="https://donate.stream/towuk" class="btn" style="background: var(--donate)">Донат</a>
+            <a href="https://www.tbank.ru/rm/r_ymcelpRvQZ.sQXGyReXPX/DfvUH71354/" class="btn" style="background: var(--donate)">Т-Банк</a>
+            <a href="https://live.vkvideo.ru/towuk" class="btn" style="background: var(--vk)">Вк Лайв</a>
+            <a href="https://kick.com/towuk" class="btn" style="background: var(--kick)">Кик</a>
+            <a href="https://youtube.com/TOWUK" class="btn" style="background: var(--yt)">Ютуб</a>
+        </div>
+    </div>
+</body>
+</html>
