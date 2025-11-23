@@ -45,44 +45,51 @@
         .container {
             text-align: center;
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             max-height: 100vh;
             overflow: hidden;
         }
         
         .avatar {
-            width: 100px;
-            height: 100px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
-            margin: 0 auto 15px;
+            margin: 0 auto 20px;
             background: url('avatar.webp') center/cover;
         }
         
         h1 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
             font-weight: 700;
+            line-height: 1.1;
         }
         
         .desc {
             color: #aaa;
             margin-bottom: 25px;
             line-height: 1.4;
+            font-size: 1.1rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .links {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
+            max-width: 400px;
+            margin: 0 auto;
         }
         
         .btn {
             color: #fff;
-            padding: 12px 8px;
+            padding: 14px 10px;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             transition: all 0.2s;
             text-shadow: 0px 1px 2px #000;
             position: relative;
@@ -91,7 +98,7 @@
             place-items: center;
             border: 2px solid transparent;
             border-bottom: 4px solid transparent;
-            min-height: 45px;
+            min-height: 50px;
         }
         
         .btn:hover {
@@ -135,18 +142,30 @@
                 max-width: 100%;
                 padding: 0 10px;
             }
-            .avatar { width: 90px; height: 90px; }
-            h1 { font-size: 1.3rem; }
-            .desc { font-size: 0.9rem; margin-bottom: 20px; }
-            .btn { padding: 10px 6px; font-size: 0.8rem; min-height: 40px; }
-            .links { gap: 8px; }
+            .avatar { width: 100px; height: 100px; }
+            h1 { font-size: 2.2rem; }
+            .desc { 
+                font-size: 1rem; 
+                margin-bottom: 20px;
+                max-width: 100%;
+            }
+            .btn { 
+                padding: 12px 8px; 
+                font-size: 0.85rem; 
+                min-height: 45px; 
+            }
+            .links { 
+                gap: 8px;
+                max-width: 100%;
+            }
         }
         
         @media (min-width: 768px) {
-            .container { max-width: 450px; }
-            .avatar { width: 110px; height: 110px; }
-            h1 { font-size: 1.6rem; }
-            .btn { padding: 14px 10px; font-size: 0.9rem; min-height: 50px; }
+            .container { max-width: 500px; }
+            .avatar { width: 120px; height: 120px; }
+            h1 { font-size: 3rem; }
+            .btn { padding: 16px 12px; font-size: 1rem; min-height: 55px; }
+            .links { max-width: 450px; }
         }
     </style>
 </head>
