@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="authorization_endpoint" href="https://indieauth.com/auth">
+    <link rel="token_endpoint" href="https://tokens.indieauth.com/token">
+    <link href="mailto:me@towuk.ru" rel="me">
+    <link href="mailto:towuk@internet.ru" rel="me">
+    <link href="https://github.com/towuk" rel="me">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>TOWUK / Тошик — Стример из СПб и Москвы</title>
+    <meta name="description" content="TOWUK / Тошик — стример из Санкт-Петербурга и Москвы. IRL и игровые стримы: Minecraft, CS2, Rust">
+    <meta name="keywords" content="TOWUK, Тошик, стример, Minecraft, CS2, Rust, IRL стримы, игровые стримы">
+    <meta name="author" content="TOWUK">
+    <meta name="theme-color" content="#1a1a1a">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://towuk.ru/">
+    <meta property="og:title" content="TOWUK / Тошик — Стример">
+    <meta property="og:description" content="IRL и игровые стримы: Minecraft, CS2, Rust">
+    <meta property="og:image" content="https://towuk.ru/avatar.webp">
+    <meta property="og:site_name" content="TOWUK">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://towuk.ru/">
+    <meta name="twitter:title" content="TOWUK / Тошик — Стример">
+    <meta name="twitter:description" content="IRL и игровые стримы: Minecraft, CS2, Rust">
+    <meta name="twitter:image" content="https://towuk.ru/avatar.webp">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/webp" href="avatar.webp">
+    <link rel="apple-touch-icon" href="avatar.webp">
+    
+    <style>
+        /* RESET & BASE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        /* MAIN CONTAINER */
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+            max-height: 100vh;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+            padding: 0.5rem 0;
+        }
+        
+        /* AVATAR (используем img для доступности) */
+        .avatar {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #2a2a2a;
+        }
+        
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* TYPOGRAPHY */
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+        
+        .desc {
+            color: #aaa;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            font-size: 1.1rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* LINKS GRID */
+        .links {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        /* BUTTON STYLES */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            padding: 0.875rem 0.5rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: transform 0.15s ease, filter 0.15s ease, border-color 0.15s ease;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            border-bottom: 3px solid transparent;
+            min-height: 50px;
+            background-clip: padding-box;
+        }
+        
+        /* Эффект свечения при наведении */
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+            border-bottom-width: 4px;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+            border-bottom-width: 2px;
+        }
+        
+        /* Фокус для клавиатуры (доступность) */
+        .btn:focus-visible {
+            outline: 3px solid #ffcc00;
+            outline-offset: 2px;
+            border-radius: 6px;
+        }
+        
+        /* Анимация блика */
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Цвета кнопок */
+        .telegram { background: #0088cc; border-bottom-color: #006699; }
+        .vk { background: #0077ff; border-bottom-color: #0055cc; }
+        .kick { background: #32ba00; border-bottom-color: #2b9100; }
+        .youtube { background: #ff0000; border-bottom-color: #cc0000; }
+        .wtv { background: #9146ff; border-bottom-color: #7b2eff; }
+        .donate { background: #ff6b00; border-bottom-color: #e55a00; }
+        .tbank { background: #ceac00; border-bottom-color: #bc9700; }
+        
+        /* Адаптивность */
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+                padding: 0 8px;
+            }
+            .avatar {
+                width: 90px;
+                height: 90px;
+                margin-bottom: 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .desc {
+                font-size: 0.95rem;
+                margin-bottom: 1.25rem;
+                max-width: 100%;
+            }
+            .btn {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
+                min-height: 45px;
+                border-radius: 6px;
+            }
+            .links {
+                gap: 10px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 520px;
+            }
+            .avatar {
+                width: 130px;
+                height: 130px;
+            }
+            h1 {
+                font-size: 3.2rem;
+            }
+            .btn {
+                padding: 1rem 0.75rem;
+                font-size: 1rem;
+                min-height: 58px;
+            }
+            .links {
+                max-width: 480px;
+                gap: 14px;
+            }
+        }
+        
+        /* Прокрутка для очень маленьких экранов */
+        @media (max-height: 640px) {
+            .container {
+                max-height: 100vh;
+                overflow-y: auto;
+                padding: 0.75rem 0;
+            }
+            .avatar {
+                width: 70px;
+                height: 70px;
+                margin-bottom: 0.5rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 0.25rem;
+            }
+            .desc {
+                margin-bottom: 1rem;
+                font-size: 0.85rem;
+            }
+            .btn {
+                padding: 0.6rem 0.4rem;
+                min-height: 42px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <div class="avatar">
+            <img src="avatar.webp" alt="Аватар TOWUK / Тошик" width="110" height="110">
+        </div>
+        <h1>TOWUK / Тошик</h1>
+        <p class="desc">
+            Стример из СПб и Москвы<br>
+            IRL и игровые стримы<br>
+            Minecraft • CS2 • Rust
+        </p>
+        <div class="links">
+            <a href="https://vk.ru/towukoff" class="btn vk" target="_blank" rel="noopener noreferrer">VK</a>
+            <a href="https://live.vkvideo.ru/towuk" class="btn vk" target="_blank" rel="noopener noreferrer">VK Video Live</a>
+            <a href="https://twitch.tv/towuk" class="btn wtv" target="_blank" rel="noopener noreferrer">Twitch</a>
+            <a href="https://t.me/towukru" class="btn telegram" target="_blank" rel="noopener noreferrer">Telegram</a>
+            <a href="https://kick.com/towuk" class="btn kick" target="_blank" rel="noopener noreferrer">Kick</a>
+            <a href="https://пантеон.com/live/towuk" class="btn youtube" target="_blank" rel="noopener noreferrer">Пантеон Live</a>
+            <a href="https://donationalerts.com/r/towuk" class="btn donate" target="_blank" rel="noopener noreferrer">DonationAlerts</a>
+            <a href="https://pay.cloudtips.ru/p/e773b123" class="btn tbank" target="_blank" rel="noopener noreferrer">Донат РФ</a>
+        </div>
+    </main>
+</body>
+</html>
