@@ -2,56 +2,78 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mindustry</title>
-    <style>
-        * {
-            box-sizing: border-box
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mindustry</title>
+  <style>
+    * {
+      box-sizing: border-box
+    }
 
-        body {
-            background: #000;
-            margin: 0;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-family: system-ui;
-            text-align: center;
-            padding: 1rem
-        }
+    body {
+      background: #000;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: system-ui;
+      text-align: center;
+      padding: 1rem
+    }
 
-        h1 {
-            color: #fff;
-            font-size: clamp(1.5rem, 8vw, 2.5rem);
-            margin: 0 0 2rem
-        }
+    h1 {
+      color: #fff;
+      font-size: clamp(1.5rem, 8vw, 2.5rem);
+      margin: 0 0 2rem
+    }
 
-        div {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: center
-        }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center
+    }
 
-        a {
-            background: #222;
-            color: #fff;
-            text-decoration: none;
-            padding: .7rem 1.5rem;
-            border-radius: 2rem;
-            border: 1px solid #444
-        }
-    </style>
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem
+    }
+
+    a {
+      background: #222;
+      color: #fff;
+      text-decoration: none;
+      padding: .7rem 1.5rem;
+      border-radius: 2rem;
+      border: 1px solid #444
+    }
+
+    .sub {
+      color: #888;
+      font-size: .8rem;
+      max-width: 200px;
+      line-height: 1.3
+    }
+  </style>
 </head>
 
 <body>
-    <h1>Загрузить Mindustry</h1>
-    <div><a href="https://anuke.itch.io/mindustry/purchase">С сайта разработчика</a> <a
-            href="https://disk.yandex.ru/d/TTsaLuY-ptf_Qg">Билд Тошика</a></div>
+  <h1>Загрузить Mindustry</h1>
+  <div class="buttons">
+    <div class="btn-group">
+      <a href="https://anuke.itch.io/mindustry/purchase">с сайта разработчика</a>
+      <div class="sub">Выбрать: No thanks, just take me to the downloads</div>
+    </div>
+    <div class="btn-group">
+      <a href="https://disk.yandex.ru/d/TTsaLuY-ptf_Qg">билд Тошика</a>
+      <div class="sub">Запустить ИГРАТЬ.bat</div>
+    </div>
+  </div>
 </body>
 
 </html>
