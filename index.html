@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TOWUK / Тошик — стример из СПб и Москвы. IRL и игровые стримы на Twitch и VK.">
+  <meta name="keywords" content="TOWUK, Тошик, стример, Minecraft, CS2, Rust, IRL стримы, игровые стримы">
+  <title>TOWUK / Тошик — стример</title>
+  <style>
+    :root {
+      --bg-body: #000;
+      --text-title: #fff;
+      --text-desc: #aaa;
+      --bg-btn: #222;
+      --text-btn: #fff;
+      --border-btn: #444;
+      --radius-btn: 2rem;
+      --buttons-per-row: 2;
+      --buttons-gap: 1rem;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg-body);
+      font-family: system-ui;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: system-ui, sans-serif;
+      text-align: center;
+      padding: 1rem;
+      color-scheme: dark;
+    }
+
+    h1 {
+      color: var(--text-title);
+      font-size: clamp(1.8rem, 8vw, 2.8rem);
+      font-weight: 900;
+      margin: 0 0 0.75rem;
+    }
+
+    .desc {
+      color: var(--text-desc);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      line-height: 1.4;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(var(--buttons-per-row), 1fr);
+      gap: var(--buttons-gap);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .buttons a {
+      background: var(--bg-btn);
+      color: var(--text-btn);
+      text-decoration: none;
+      padding: 0.7rem 0.5rem;
+      border-radius: var(--radius-btn);
+      border: 1px solid var(--border-btn);
+      font-size: clamp(0.85rem, 4vw, 1rem);
+      text-align: center;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>TOWUK / Тошик</h1>
+  <div class="desc">
+    Стример из СПб и Москвы<br>
+    IRL и игровые стримы
+  </div>
+  <div class="buttons">
+    <a href="//vk.ru/towukoff">VK сообщество</a>
+    <a href="//live.vkvideo.ru/towuk">VK стримы</a>
+    <a href="//pay.cloudtips.ru/p/e773b123">Донат</a>
+    <a href="//twitch.tv/towuk">Твич</a>
+  </div>
+</body>
+
+</html>
