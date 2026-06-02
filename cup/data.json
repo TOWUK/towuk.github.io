@@ -1,0 +1,124 @@
+{
+  "config": {
+    "pageTitle": "TOWUK RU — MINDUSTRY CUP",
+    "pageDescription": "Рейтинговые турниры • Матчи и статистика",
+    "teamsHeader": "Команда",
+    "statsHeader": "Статистика",
+    "infoHeader": "Информация",
+    "teamsHeader2": "Команды",
+    "modalTitle": "Правила турнира Mindustry",
+    "modalFooter": "Соблюдайте правила — играйте честно!",
+    "topLinks": [
+      {
+        "label": "Канал Twitch",
+        "color": "#9146ff",
+        "url": "https://twitch.tv/towuk"
+      },
+      { "label": "Правила", "color": "#f97316", "isRules": true },
+      {
+        "label": "Донат",
+        "color": "#10b981",
+        "url": "https://pay.cloudtips.ru/p/e773b123"
+      },
+      {
+        "label": "ВСЕ ВОПРОСЫ, ЗАЯВКИ",
+        "color": "#3b82f6",
+        "url": "https://vk.com/im?sel=-37395484"
+      }
+    ]
+  },
+  "rules": [
+    {
+      "title": "1. Формат и сетка",
+      "text": "Игроки заранее (за 5-10 минут до начала матча) подготавливаются и заходят на карту. Матч начинается строго во время по таблице матчей. По желанию можно проводить трансляции."
+    },
+    {
+      "title": "2. Игровые настройки",
+      "text": "Режим всех карт: ПвП. Используются только кастомные карты отобранные для турниров. При старте у команд начальные ядра, 0 ресурсов."
+    },
+    {
+      "title": "3. Запрещённые действия",
+      "text": "Читы, автокликеры, скрипты, баги, намеренный лаг, DDoS, оскорбления, расизм, токсичность. Можно использовать моды меняющие визуальную часть игры."
+    },
+    {
+      "title": "4. Проведение матча",
+      "text": "пока не придумал блиять. Результат фиксируется скриншотом с датой и/или видеодоказательствами"
+    },
+    {
+      "title": "5. Дисциплина",
+      "text": "Опоздание на более 15 мин или неявка: тех. поражение. Замена игрока за 30 мин: уведомить администратора."
+    },
+    {
+      "title": "6. Роль организаторов",
+      "text": "Администрация TOWUK RU MINDUSTRY CUP стремится к справедливости, но может быть ограничена в информации. Окончательное решение за организаторами на основе доказательств. Апелляции в течение 1 часа."
+    },
+    {
+      "title": "7. Ответственность игроков",
+      "text": "Игроки отвечают за своё оборудование и интернет. Организаторы не компенсируют технические проблемы."
+    },
+    {
+      "title": "8. Исправление проблем",
+      "text": "Если по каким то причинам имеются проблемы с игрой, скачивать лаунчер: towuk.ru/dl - 100% совместим с сервером"
+    }
+  ],
+  "teams": [
+    {
+      "id": 1,
+      "name": "Silicon Warriors",
+      "color": "#f87171",
+      "wins": 5,
+      "losses": 1,
+      "players": [
+        {
+          "nick": "Kappa",
+          "color": "#f9a8d4",
+          "link": "https://twitch.tv/kappa"
+        },
+        { "nick": "Zergling", "color": "#86efac", "link": null },
+        {
+          "nick": "Nexus",
+          "color": "#fde047",
+          "link": "https://youtube.com/@nexus"
+        },
+        { "nick": "Chip", "color": "#c4b5fd", "link": null },
+        {
+          "nick": "Byte",
+          "color": "#6ee7b7",
+          "link": "https://steamcommunity.com/id/byte"
+        },
+        { "nick": "Русский игрок", "color": "#fca5a5", "link": null }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Factory Guardians",
+      "color": "#facc15",
+      "wins": 4,
+      "losses": 2,
+      "players": [
+        { "nick": "Miner42", "color": "#fbcfe8", "link": null },
+        {
+          "nick": "Smelter",
+          "color": "#bfdbfe",
+          "link": "https://twitch.tv/smelter"
+        },
+        { "nick": "ConveyorBelt", "color": "#fdba74", "link": null },
+        { "nick": "Alloy", "color": "#bef264", "link": "https://vk.com/alloy" },
+        { "nick": "привет_игрок", "color": "#d9f99d", "link": null }
+      ]
+    }
+  ],
+  "matches": [
+    {
+      "id": 1,
+      "dateTime": "так а что тут у нас, дата и время...",
+      "map": "Salt Flats",
+      "duration": "1ч 20м",
+      "winnerId": 1,
+      "teams": [
+        { "teamId": 1, "players": ["Kappa", "Zergling", "Nexus"] },
+        { "teamId": 2, "players": ["CoreBreaker", "какой то пидор"] }
+      ]
+    }
+  ]
+}
