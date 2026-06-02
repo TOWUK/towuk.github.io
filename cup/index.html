@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOWUK RU — Турниры Mindustry</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --border:#2c2c2c;--bg:#0a0a0a;--text:#9ca3af;
+      --stat-wins:#10b981;--stat-losses:#ef4444;--stat-sep:#6b7280;
+      --pad:2.2rem;--pad-left-td:1.2rem;--pad-right-stats:2.2rem;
+      --pad-right-cmd:calc(var(--pad) - 1rem)
+    }
+    html,body{overflow-y:scroll;scrollbar-width:none}body::-webkit-scrollbar{display:none}
+    body{background:#000;font-family:system-ui,sans-serif;color:#fff;line-height:1.4}
+    .container{max-width:1024px;margin:0 auto;padding:1.5rem 1rem}
+    .header{text-align:center;margin-bottom:1.5rem}
+    .header h1{font-size:2rem;font-weight:800}
+    .header p{color:var(--text);font-size:.875rem}
+
+    .links{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem;margin-bottom:2rem}
+    .top-link{background:#0a0a0a;border:1px solid var(--border);padding:.4rem 1rem;font-size:.85rem;color:#ddd;text-decoration:none;transition:.15s}
+    .top-link:hover{background:#1a1a1a;border-color:currentColor}
+
+    .data-table,.schedule-table{width:100%;border-collapse:collapse;background:rgba(0,0,0,0.4);margin-bottom:2rem}
+    th,td{padding:12px 0;border-bottom:1px solid var(--border);vertical-align:baseline}
+    th{color:var(--text);background:var(--bg);text-transform:uppercase;font-size:1rem;font-weight:700}
+
+    .data-table th:first-child,.schedule-table th:first-child{text-align:left;padding-left:var(--pad)}
+    .data-table td:first-child{text-align:left;padding-left:var(--pad-left-td)}
+    .schedule-table td:first-child{text-align:left;padding-left:var(--pad)}
+    .data-table th:last-child,.schedule-table th:last-child{text-align:right;padding-right:var(--pad)}
+    .data-table td:last-child{text-align:right;padding-right:var(--pad-right-stats)}
+    .schedule-table td:last-child{text-align:right;padding-right:var(--pad-right-cmd)}
+
+    .schedule-table th:first-child,.schedule-table td:first-child{width:30%}
+    .team-block{display:inline-flex;flex-direction:column;align-items:flex-start;gap:.5rem}
+    .schedule-teams-wrapper{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+    .schedule-teams-wrapper .team-block{align-items:flex-end}
+    .team-chip{cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;background:#111;border:1px solid var(--border);padding:.3rem 1rem;font-size:1rem;font-weight:700;transition:border-color .1s;line-height:1.2}
+    .team-chip:hover,.team-chip.active-chip{border-color:currentColor!important}
+    .roster-container{display:none;flex-wrap:wrap;gap:.5rem;padding:.2rem 0}
+    .roster-container.visible{display:flex}
+    .schedule-teams-wrapper .roster-container{justify-content:flex-end}
+    .player-chip{padding:.15rem .7rem;font-size:.8rem;border:1px solid var(--border);background:rgba(255,255,255,0.05)}
+    .player-link{text-decoration:underline;font-weight:700}
+    .player-normal{text-decoration:none}
+    .stat-numbers{display:inline-block;font-size:1rem;font-weight:700;white-space:nowrap}
+    .stat-sep{color:var(--stat-sep);margin:0}
+    .schedule-info{display:flex;flex-direction:column;gap:.2rem}
+    .schedule-map{font-weight:700;font-size:.95rem}
+    .schedule-duration,.schedule-datetime{color:#6b7280;font-size:.8rem}
+    .schedule-datetime{color:#fff;margin-top:.2rem}
+    .modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.95)}
+    .modal.active{display:flex}
+    .modal-card{background:#0f0f0f;border:1px solid var(--border);width:540px;max-width:92%;max-height:85vh;display:flex;flex-direction:column;overflow:hidden}
+    .modal-header{display:flex;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border)}
+    .modal-header h3{font-size:1.35rem;font-weight:700}
+    .modal-close{background:none;border:none;color:var(--text);font-size:2rem;cursor:pointer}
+    .modal-close:hover{color:#fff}
+    .modal-content{padding:1.5rem;overflow-y:auto;scrollbar-width:none}
+    .modal-content::-webkit-scrollbar{display:none}
+    .rules-list{list-style:none;display:flex;flex-direction:column;gap:1rem}
+    .rules-list strong{color:#facc15;display:block;margin-bottom:.2rem}
+    hr{border:none;border-top:1px solid var(--border);margin:1rem 0}
+    @media (max-width:700px){
+      th,td{padding:8px 0}
+      .data-table th:first-child,.schedule-table th:first-child{padding-left:1.8rem}
+      .data-table td:first-child{padding-left:1rem}
+      .schedule-table td:first-child{padding-left:1.8rem}
+      .data-table th:last-child,.schedule-table th:last-child{padding-right:1.8rem}
+      .data-table td:last-child{padding-right:1.8rem}
+      .schedule-table td:last-child{padding-right:calc(1.8rem - 0.7rem)}
+      .team-chip{padding:.2rem .7rem;font-size:.85rem}
+      .stat-numbers,th{font-size:.85rem}
+      .schedule-table th:first-child,.schedule-table td:first-child{width:35%}
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header"><h1 id="pageTitle"></h1><p id="pageDescription"></p></div>
+  <div class="links" id="linksContainer"></div>
+  <table class="data-table"><thead><tr><th id="teamsHeader"></th><th id="statsHeader"></th></tr></thead><tbody id="teamsTableBody"></tbody><tr>
+  <table class="schedule-table"><thead><tr><th id="infoHeader"></th><th id="teamsHeader2"></th></tr></thead><tbody id="scheduleTableBody"></tbody></table>
+</div>
+<div id="rulesModal" class="modal">
+  <div class="modal-card"><div class="modal-header"><h3 id="modalTitle"></h3><button class="modal-close" id="closeModalBtn">&times;</button></div><div class="modal-content" id="modalContent"></div></div>
+</div>
+<script>
+  (async () => {
+    const res = await fetch("data.json");
+    const { config, rules, teams, matches } = await res.json();
+
+    const texts = {
+      pageTitle: config.pageTitle,
+      pageDescription: config.pageDescription,
+      teamsHeader: config.teamsHeader,
+      statsHeader: config.statsHeader,
+      infoHeader: config.infoHeader,
+      teamsHeader2: config.teamsHeader2,
+      modalTitle: config.modalTitle,
+    };
+    for (const [id, text] of Object.entries(texts))
+      document.getElementById(id).textContent = text;
+
+    const teamMap = new Map(teams.map(t => [t.id, t]));
+    const sortedTeams = [...teams]
+      .map(t => ({
+        ...t,
+        games: t.wins + t.losses,
+        wr: t.wins + t.losses ? (t.wins / (t.wins + t.losses)) * 100 : 0,
+      }))
+      .sort((a, b) => b.wr - a.wr || b.games - a.games);
+
+    const createPlayerChip = (p, isCap, teamColor) => {
+      const chip = document.createElement("div");
+      chip.className = "player-chip";
+      chip.style.backgroundColor = teamColor + "66";
+      if (isCap) {
+        const star = document.createElement("span");
+        star.textContent = "⭐ "; // цвет по умолчанию, без CSS
+        chip.appendChild(star);
+      }
+      const el = document.createElement(p.link ? "a" : "span");
+      el.textContent = p.nick;
+      el.style.color = p.color;
+      if (p.link) {
+        el.href = p.link;
+        el.target = "_blank";
+        el.rel = "noopener noreferrer";
+        el.style.textDecoration = "underline";
+        el.className = "player-link";
+      } else {
+        el.style.textDecoration = "none";
+        el.className = "player-normal";
+      }
+      chip.appendChild(el);
+      return chip;
+    };
+
+    const buildRoster = (players, teamColor) => {
+      const c = document.createElement("div");
+      c.className = "roster-container";
+      players.forEach((p, i) => c.appendChild(createPlayerChip(p, i === 0, teamColor)));
+      if (!players.length) c.innerHTML = '<span style="font-size:0.7rem; color:#6b7280">нет игроков</span>';
+      return c;
+    };
+
+    const createTeamBlock = (team, isWinner = false) => {
+      const block = document.createElement("div");
+      block.className = "team-block";
+      const btn = document.createElement("span");
+      btn.className = "team-chip";
+      btn.style.color = team.color;
+      btn[isWinner ? "innerHTML" : "textContent"] = isWinner ? `🏆 ${team.name}` : team.name;
+      const roster = buildRoster(team.players, team.color);
+      block.append(btn, roster);
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        roster.classList.toggle("visible");
+        btn.classList.toggle("active-chip", roster.classList.contains("visible"));
+      };
+      return block;
+    };
+
+    const teamsTbody = document.getElementById("teamsTableBody");
+    teamsTbody.replaceChildren();
+    sortedTeams.forEach(team => {
+      const row = teamsTbody.insertRow();
+      row.insertCell(0).appendChild(createTeamBlock(team));
+      row.insertCell(1).innerHTML = `<div class="stat-numbers"><span style="color:white">${team.wins + team.losses}</span><span class="stat-sep">/</span><span style="color:var(--stat-wins)">${team.wins}</span><span class="stat-sep">/</span><span style="color:var(--stat-losses)">${team.losses}</span></div>`;
+    });
+
+    const scheduleTbody = document.getElementById("scheduleTableBody");
+    scheduleTbody.replaceChildren();
+    matches.forEach(m => {
+      const teamsInfo = m.teams.map(tm => {
+        const team = teamMap.get(tm.teamId);
+        const players = tm.players.map(nick => team?.players.find(p => p.nick === nick) || { nick, color: "#ccc", link: null });
+        return { team, players, color: team?.color || "#9ca3af" };
+      });
+      const row = scheduleTbody.insertRow();
+      row.insertCell(0).innerHTML = `<div class="schedule-info"><div><span class="schedule-map">${m.map}</span> <span class="schedule-duration">(${m.duration})</span></div><div class="schedule-datetime">${m.dateTime}</div></div>`;
+      const wrapper = document.createElement("div");
+      wrapper.className = "schedule-teams-wrapper";
+      teamsInfo.forEach(({ team, players, color }) => {
+        const teamObj = { ...team, players, color };
+        wrapper.appendChild(createTeamBlock(teamObj, m.winnerId === team?.id));
+      });
+      row.insertCell(1).appendChild(wrapper);
+    });
+
+    const linksContainer = document.getElementById("linksContainer");
+    linksContainer.replaceChildren();
+    config.topLinks.forEach(link => {
+      const a = document.createElement("a");
+      a.className = "top-link";
+      a.textContent = link.label;
+      a.style.color = link.color;
+      a.style.borderColor = "#2c2c2c";
+      a.onmouseenter = () => a.style.borderColor = link.color;
+      a.onmouseleave = () => a.style.borderColor = "#2c2c2c";
+      if (link.isRules) {
+        a.href = "#";
+        a.onclick = (e) => { e.preventDefault(); openModal(); };
+      } else if (link.url) {
+        a.href = link.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+      }
+      linksContainer.appendChild(a);
+    });
+
+    const modal = document.getElementById("rulesModal");
+    const closeBtn = document.getElementById("closeModalBtn");
+    const openModal = () => { modal.classList.add("active"); document.body.style.overflow = "hidden"; };
+    const closeModal = () => { modal.classList.remove("active"); document.body.style.overflow = ""; };
+    modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+    closeBtn.onclick = closeModal;
+
+    const modalContent = document.getElementById("modalContent");
+    const rulesList = document.createElement("ul");
+    rulesList.className = "rules-list";
+    rules.forEach(rule => {
+      const li = document.createElement("li");
+      const strong = document.createElement("strong");
+      strong.textContent = rule.title;
+      li.appendChild(strong);
+      li.appendChild(document.createTextNode(" " + rule.text));
+      rulesList.appendChild(li);
+    });
+    const hr = document.createElement("hr");
+    const footer = document.createElement("p");
+    footer.style.cssText = "font-size:0.7rem;text-align:center;color:#6b7280";
+    footer.textContent = config.modalFooter;
+    modalContent.replaceChildren(rulesList, hr, footer);
+  })();
+</script>
+</body>
+</html>
