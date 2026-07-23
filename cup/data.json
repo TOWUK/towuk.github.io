@@ -64,31 +64,16 @@
   "teams": [
     {
       "id": 1,
-      "name": "Silicon Warriors",
+      "name": "м3буст",
       "color": "#f87171",
       "wins": 5,
       "losses": 1,
       "players": [
         {
-          "nick": "Kappa",
+          "nick": "mixmain17",
           "color": "#f9a8d4",
-          "link": "https://twitch.tv/kappa"
+          "link": "https://www.twitch.tv/mixmain17"
         },
-        { "nick": "Zergling", "color": "#86efac", "link": null },
-        {
-          "nick": "Nexus",
-          "color": "#fde047",
-          "link": "https://youtube.com/@nexus"
-        },
-        { "nick": "Chip", "color": "#c4b5fd", "link": null },
-        {
-          "nick": "Byte",
-          "color": "#6ee7b7",
-          "link": "https://steamcommunity.com/id/byte"
-        },
-        { "nick": "Русский игрок", "color": "#fca5a5", "link": null }
-      ]
-    },
     {
       "id": 2,
       "name": "Factory Guardians",
