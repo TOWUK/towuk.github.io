@@ -1,95 +1,118 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="TOWUK / Тошик — стример из СПб и Москвы. IRL и игровые стримы на Twitch и VK.">
-  <meta name="keywords" content="TOWUK, Тошик, стример, Minecraft, CS2, Rust, IRL стримы, игровые стримы">
-  <link rel="icon" type="image/webp" href="avatar.webp">
-  <link rel="apple-touch-icon" href="avatar.webp">
-  <title>TOWUK / Тошик — стример</title>
-  <style>
-    :root {
-      --bg-body: #000;
-      --text-title: #fff;
-      --text-desc: #aaa;
-      --bg-btn: #222;
-      --text-btn: #fff;
-      --border-btn: #444;
-      --radius-btn: 2rem;
-      --buttons-per-row: 2;
-      --buttons-gap: 1rem;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="icon" type="image/webp" href="avatar.webp">
 
-    * {
-      box-sizing: border-box;
-    }
+<!-- SEO Мета-теги -->
+<title>TOWUK (Антон) — Стример | Minecraft, Mindustry, IRL, CS 2</title>
+<meta name="description" content="Официальный сайт стримера TOWUK (Антон). Трансляции из Санкт-Петербурга и Москвы по Minecraft, Mindustry, IRL и CS2. Twitch, YouTube, VK и Донат.">
+<meta name="keywords" content="TOWUK, Антон, стример, Twitch, YouTube, VK, WTV, Minecraft, Mindustry, CS2, IRL, Санкт-Петербург, Москва, донат">
+<meta name="author" content="TOWUK">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="TOWUK — Стример">
+<meta property="og:description" content="Трансляции по Minecraft, Mindustry, IRL, CS 2. Санкт-Петербург / Москва.">
+<meta property="og:image" content="avatar.webp">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
 
-    body {
-      background: var(--bg-body);
-      font-family: system-ui;
-      margin: 0;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 1rem;
-      color-scheme: dark;
-    }
-
-    h1 {
-      color: var(--text-title);
-      font-size: clamp(1.8rem, 8vw, 2.8rem);
-      font-weight: 900;
-      margin: 0 0 0.75rem;
-    }
-
-    .desc {
-      color: var(--text-desc);
-      font-size: 1rem;
-      margin-bottom: 2rem;
-      line-height: 1.4;
-    }
-
-    .buttons {
-      display: grid;
-      grid-template-columns: repeat(var(--buttons-per-row), 1fr);
-      gap: var(--buttons-gap);
-      max-width: 400px;
-      width: 100%;
-    }
-
-    .buttons a {
-      background: var(--bg-btn);
-      color: var(--text-btn);
-      text-decoration: none;
-      padding: 0.7rem 0.5rem;
-      border-radius: var(--radius-btn);
-      border: 1px solid var(--border-btn);
-      font-size: clamp(0.85rem, 4vw, 1rem);
-      text-align: center;
-      white-space: nowrap;
-    }
-  </style>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--bg:#000;--t:#fff;--m:#6a6a6a;--m2:#d4d4d4;--l:#1a1a1a}
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--bg);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;padding:24px;min-height:100dvh;position:relative;z-index:0}
+  
+  /* Фоновые слои */
+  .orbs{position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);mix-blend-mode:screen;opacity:.35}
+  .o1{width:500px;height:500px;top:-10%;left:-10%;animation:f1 20s infinite alternate ease-in-out}
+  .o2{width:450px;height:450px;bottom:-10%;right:-10%;animation:f2 25s infinite alternate ease-in-out}
+  .o3{width:350px;height:350px;top:40%;left:30%;animation:f3 22s infinite alternate ease-in-out}
+  
+  @keyframes f1{0%{transform:translate(0,0) scale(1);background:#0077FF}33%{transform:translate(150px,80px) scale(1.2);background:#9146FF}66%{transform:translate(80px,200px) scale(.9);background:#00C2FF}100%{transform:translate(200px,-50px) scale(1.1);background:#4A00E0}}
+  @keyframes f2{0%{transform:translate(0,0) scale(1);background:#9146FF}33%{transform:translate(-120px,-80px) scale(1.1);background:#FF0000}66%{transform:translate(-50px,-200px) scale(.8);background:#FFDD2D}100%{transform:translate(-180px,40px) scale(1.2);background:#0077FF}}
+  @keyframes f3{0%{transform:translate(0,0) scale(1);background:#FFDD2D}33%{transform:translate(-100px,100px) scale(1.3);background:#FF6B00}66%{transform:translate(100px,-50px) scale(.9);background:#9146FF}100%{transform:translate(150px,150px) scale(1.1);background:#00C2FF}}
+  
+  body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,.4) 0%,rgba(0,0,0,.85) 100%);z-index:-2;pointer-events:none}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:56px 56px;z-index:-1;pointer-events:none}
+  
+  /* Контент */
+  .container{width:100%;max-width:580px;display:flex;flex-direction:column;gap:44px;position:relative}
+  .reveal{opacity:0;transform:translateY(12px);animation:rv 1s cubic-bezier(.22,1,.36,1) forwards}
+  .reveal:nth-child(2){animation-delay:.15s}
+  @keyframes rv{to{opacity:1;transform:none}}
+  
+  .profile{text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .name{font-size:clamp(48px,9vw,76px);font-weight:800;letter-spacing:-.045em;line-height:1;text-shadow:0 4px 20px rgba(0,0,0,.8)}
+  .sub{color:var(--m2);font-size:20px;font-weight:600;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+  .tags{color:var(--m2);font-size:13px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;font-family:ui-monospace,'SF Mono',Menlo,monospace;text-shadow:0 2px 12px rgba(0,0,0,.9)}
+  
+  /* Кнопки */
+  .links-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--l);border:1px solid var(--l);border-radius:16px;overflow:hidden}
+  .link{background:rgba(0,0,0,.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:26px 16px;display:flex;align-items:center;justify-content:center;color:var(--t);text-decoration:none;font-size:18px;font-weight:700;letter-spacing:.02em;transition:background .35s,color .35s;position:relative;overflow:hidden}
+  .link::before{content:'';position:absolute;inset:0;background:var(--hc,#fff);transform:translateY(101%);transition:transform .4s cubic-bezier(.22,1,.36,1)}
+  .link:hover::before{transform:translateY(0)}
+  .link span{position:relative;z-index:1;transition:color .35s,text-shadow .35s}
+  .link:hover span{color:#fff;text-shadow:1px 1px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,0 4px 10px rgba(0,0,0,.9)}
+  
+  /* Адаптив */
+  @media (max-width:680px){body{padding:16px}.container{gap:32px}.profile{gap:10px}.name{font-size:48px}.sub{font-size:17px}.tags{font-size:11px}.links-grid{grid-template-columns:1fr}.link{padding:22px 14px;font-size:17px}}
+  @media (max-height:680px){.container{gap:28px}.name{font-size:42px}.sub{font-size:16px}.link{padding:18px 14px;font-size:16px}}
+  @media (max-height:540px) and (max-width:680px){.container{gap:16px}.name{font-size:34px}.sub{font-size:14px}.link{padding:14px 14px;font-size:15px}.tags{display:none}}
+</style>
 </head>
-
 <body>
-  <h1>TOWUK / Тошик</h1>
-  <div class="desc">
-    Стример из СПб и Москвы<br>
-    IRL и игровые стримы<br><br>
-    <a href="mailto:me@towuk.ru"><b>Связаться по почте</b></a> для сотрудничества
-  </div>
-  <div class="buttons">
-    <a href="//pay.cloudtips.ru/p/e773b123"><b>ДОНАТ</b></a>
-    <a href="//vk.ru/towukoff">VK</a>
-    <a href="//twitch.tv/towuk">Twitch</a>
-    <a href="//live.vkvideo.ru/towuk">VK Видео Live</a>
-  </div>
-</body>
 
+<div class="orbs"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
+
+<!-- ==========================================
+     НАСТРОЙКИ САЙТА
+========================================== -->
+<script>
+const SITE_CONFIG = {
+  name: "TOWUK",
+  sub: "Антон • Санкт-Петербург / Москва",
+  tags: "Minecraft • Mindustry • CS2 • IRL",
+  links: [
+    { name: "ДОНАТ", url: "https://pay.cloudtips.ru/p/e773b123", color: "#FFDD2D" },
+    { name: "ТВИЧ", url: "https://twitch.tv/towuk", color: "#9146FF" },
+    { name: "ВК", url: "https://vk.ru/towukoff", color: "#0077FF" },
+    { name: "ЮТУБ", url: "https://youtube.com/towuk", color: "#FF0000" }
+  ]
+};
+</script>
+
+<!-- ==========================================
+     HTML СТРУКТУРА
+========================================== -->
+<div class="container">
+  <div class="profile reveal">
+    <div class="name" id="name"></div>
+    <div class="sub" id="sub"></div>
+    <div class="tags" id="tags"></div>
+  </div>
+  <div class="links-grid reveal" id="linksGrid"></div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  $('name').textContent = SITE_CONFIG.name;
+  $('sub').textContent = SITE_CONFIG.sub;
+  $('tags').textContent = SITE_CONFIG.tags;
+
+  const grid = $('linksGrid');
+  SITE_CONFIG.links.forEach(link => {
+    const a = document.createElement('a');
+    a.href = link.url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.className = 'link';
+    a.style.setProperty('--hc', link.color);
+    a.innerHTML = `<span>${link.name}</span>`;
+    grid.appendChild(a);
+  });
+</script>
+</body>
 </html>
