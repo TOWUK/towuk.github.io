@@ -59,9 +59,20 @@
   .link:hover span{color:#fff;text-shadow:1px 1px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,0 4px 10px rgba(0,0,0,.9)}
   
   /* Адаптив */
-  @media (max-width:680px){body{padding:16px}.container{gap:32px}.profile{gap:10px}.name{font-size:48px}.sub{font-size:17px}.tags{font-size:11px}.links-grid{grid-template-columns:1fr}.link{padding:22px 14px;font-size:17px}}
-  @media (max-height:680px){.container{gap:28px}.name{font-size:42px}.sub{font-size:16px}.link{padding:18px 14px;font-size:16px}}
-  @media (max-height:540px) and (max-width:680px){.container{gap:16px}.name{font-size:34px}.sub{font-size:14px}.link{padding:14px 14px;font-size:15px}.tags{display:none}}
+  @media (max-width:680px){
+    body{padding:16px}
+    .container{gap:32px}
+    .profile{gap:10px}
+    .name{font-size:48px}
+    .sub{font-size:17px}
+    .tags{font-size:11px}
+    .links-grid{
+      grid-template-columns:1fr;
+      max-width:420px; 
+      margin:0 auto;
+    }
+    .link{padding:22px 14px;font-size:17px}
+  }
 </style>
 </head>
 <body>
