@@ -68,11 +68,14 @@
     .tags{font-size:11px}
     .links-grid{
       grid-template-columns:1fr;
-      max-width:420px; 
+      width:70%; 
       margin:0 auto;
     }
     .link{padding:22px 14px;font-size:17px}
   }
+  
+  @media (max-height:680px){.container{gap:28px}.name{font-size:42px}.sub{font-size:16px}.link{padding:18px 14px;font-size:16px}}
+  @media (max-height:540px) and (max-width:680px){.container{gap:16px}.name{font-size:34px}.sub{font-size:14px}.link{padding:14px 14px;font-size:15px}.tags{display:none}}
 </style>
 </head>
 <body>
