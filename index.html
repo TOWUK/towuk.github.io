@@ -21,7 +21,7 @@
 
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  :root{--bg:#000;--t:#fff;--m:#6a6a6a;--m2:#d4d4d4;--l:#1a1a1a}
+  :root{--bg:#000;--t:#fff;--m:#6a6a6a;--m2:#d4d4d4;--l:#1a1a1a;--bg-modal:#080808}
   html,body{height:100%;overflow:hidden}
   body{background:var(--bg);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;padding:24px;min-height:100dvh;position:relative;z-index:0}
   
@@ -31,18 +31,25 @@
   .o1{width:500px;height:500px;top:-10%;left:-10%;animation:f1 20s infinite alternate ease-in-out}
   .o2{width:450px;height:450px;bottom:-10%;right:-10%;animation:f2 25s infinite alternate ease-in-out}
   .o3{width:350px;height:350px;top:40%;left:30%;animation:f3 22s infinite alternate ease-in-out}
-  
   @keyframes f1{0%{transform:translate(0,0) scale(1);background:#0077FF}33%{transform:translate(150px,80px) scale(1.2);background:#9146FF}66%{transform:translate(80px,200px) scale(.9);background:#00C2FF}100%{transform:translate(200px,-50px) scale(1.1);background:#4A00E0}}
   @keyframes f2{0%{transform:translate(0,0) scale(1);background:#9146FF}33%{transform:translate(-120px,-80px) scale(1.1);background:#FF0000}66%{transform:translate(-50px,-200px) scale(.8);background:#FFDD2D}100%{transform:translate(-180px,40px) scale(1.2);background:#0077FF}}
   @keyframes f3{0%{transform:translate(0,0) scale(1);background:#FFDD2D}33%{transform:translate(-100px,100px) scale(1.3);background:#FF6B00}66%{transform:translate(100px,-50px) scale(.9);background:#9146FF}100%{transform:translate(150px,150px) scale(1.1);background:#00C2FF}}
-  
   body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,.4) 0%,rgba(0,0,0,.85) 100%);z-index:-2;pointer-events:none}
-  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:56px 56px;z-index:-1;pointer-events:none}
+  
+  /* Растворение сетки */
+  body::before{
+    content:'';position:fixed;inset:0;
+    background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);
+    background-size:56px 56px;z-index:-1;pointer-events:none;
+    mask-image:radial-gradient(ellipse 120% 120% at center, black 0%, transparent 80%);
+    -webkit-mask-image:radial-gradient(ellipse 120% 120% at center, black 0%, transparent 80%);
+  }
   
   /* Контент */
-  .container{width:100%;max-width:580px;display:flex;flex-direction:column;gap:44px;position:relative}
+  .container{width:100%;max-width:580px;display:flex;flex-direction:column;gap:32px;position:relative;align-items:center}
   .reveal{opacity:0;transform:translateY(12px);animation:rv 1s cubic-bezier(.22,1,.36,1) forwards}
   .reveal:nth-child(2){animation-delay:.15s}
+  .reveal:nth-child(3){animation-delay:.3s}
   @keyframes rv{to{opacity:1;transform:none}}
   
   .profile{text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
@@ -51,30 +58,64 @@
   .tags{color:var(--m2);font-size:13px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;font-family:ui-monospace,'SF Mono',Menlo,monospace;text-shadow:0 2px 12px rgba(0,0,0,.9)}
   
   /* Кнопки */
-  .links-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--l);border:1px solid var(--l);border-radius:16px;overflow:hidden}
+  .links-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--l);border:1px solid var(--l);border-radius:16px;overflow:hidden;width:100%}
   .link{background:rgba(0,0,0,.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:26px 16px;display:flex;align-items:center;justify-content:center;color:var(--t);text-decoration:none;font-size:18px;font-weight:700;letter-spacing:.02em;transition:background .35s,color .35s;position:relative;overflow:hidden}
   .link::before{content:'';position:absolute;inset:0;background:var(--hc,#fff);transform:translateY(101%);transition:transform .4s cubic-bezier(.22,1,.36,1)}
   .link:hover::before{transform:translateY(0)}
   .link span{position:relative;z-index:1;transition:color .35s,text-shadow .35s}
   .link:hover span{color:#fff;text-shadow:1px 1px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,0 4px 10px rgba(0,0,0,.9)}
   
+  /* Кнопка рефералок */
+  .btn-ref{background:transparent;border:none;color:var(--m);font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:color .3s;padding:8px 0}
+  .btn-ref:hover{color:var(--m2)}
+  
+  /* Модальное окно */
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:100;display:none;align-items:center;justify-content:center;padding:24px}
+  .modal-bg.active{display:flex}
+  .modal{background:var(--bg-modal);border:1px solid var(--l);border-radius:16px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto;position:relative;padding:28px;animation:modalIn .4s cubic-bezier(.22,1,.36,1)}
+  @keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+  .modal::-webkit-scrollbar{width:4px}
+  .modal::-webkit-scrollbar-track{background:transparent}
+  .modal::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+  .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--m);font-size:24px;cursor:pointer;transition:color .2s;line-height:1}
+  .modal-close:hover{color:#fff}
+  .modal-title{font-size:22px;font-weight:700;margin-bottom:8px;color:#fff}
+  .modal-desc{font-size:13px;color:var(--m);margin-bottom:24px;line-height:1.5}
+  .ref-cat{font-size:14px;font-weight:700;color:var(--t);margin-top:20px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--l)}
+  .ref-item{display:flex;justify-content:space-between;align-items:center;padding:12px 12px;text-decoration:none;color:var(--m2);border-radius:8px;transition:background .2s,color .2s;cursor:pointer;gap:12px}
+  .ref-item:hover{background:rgba(255,255,255,.05);color:#fff}
+  .ref-name{font-size:14px;font-weight:500;line-height:1.3}
+  
+  /* Бейджи бонусов */
+  .ref-bonus{
+    font-size:11px;font-weight:700;color:#FFDD2D;
+    background:rgba(255,221,45,.1);border:1px solid rgba(255,221,45,.3);
+    padding:4px 8px;border-radius:6px;text-align:right;white-space:nowrap;
+    transition:background .2s;
+  }
+  .ref-item:hover .ref-bonus{background:rgba(255,221,45,.2)}
+  
+  /* Бейджи промокодов */
+  .ref-bonus.code{
+    color:#00C2FF;background:rgba(0,194,255,.1);border-color:rgba(0,194,255,.3);
+    font-family:ui-monospace,'SF Mono',Menlo,monospace;
+  }
+  .ref-item:hover .ref-bonus.code{background:rgba(0,194,255,.2)}
+  .ref-item.copied .ref-bonus.code{color:#fff;background:rgba(0,194,255,.4)}
+  
   /* Адаптив */
   @media (max-width:680px){
     body{padding:16px}
-    .container{gap:32px}
+    .container{gap:28px}
     .profile{gap:10px}
     .name{font-size:48px}
     .sub{font-size:17px}
     .tags{font-size:11px}
-    .links-grid{
-      grid-template-columns:1fr;
-      width:60%; 
-      margin:0 auto;
-    }
+    .links-grid{grid-template-columns:1fr;width:60%;margin:0 auto}
     .link{padding:22px 14px;font-size:17px}
+    .modal{padding:20px}
   }
-  
-  @media (max-height:680px){.container{gap:28px}.name{font-size:42px}.sub{font-size:16px}.link{padding:18px 14px;font-size:16px}}
+  @media (max-height:680px){.container{gap:24px}.name{font-size:42px}.sub{font-size:16px}.link{padding:18px 14px;font-size:16px}}
   @media (max-height:540px) and (max-width:680px){.container{gap:16px}.name{font-size:34px}.sub{font-size:14px}.link{padding:14px 14px;font-size:15px}.tags{display:none}}
 </style>
 </head>
@@ -83,7 +124,7 @@
 <div class="orbs"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
 
 <!-- ==========================================
-     НАСТРОЙКИ САЙТА
+     НАСТРОЙКИ САЙТА И ССЫЛКИ
 ========================================== -->
 <script>
 const SITE_CONFIG = {
@@ -95,6 +136,38 @@ const SITE_CONFIG = {
     { name: "ТВИЧ", url: "https://twitch.tv/towuk", color: "#9146FF" },
     { name: "ВК", url: "https://vk.ru/towukoff", color: "#0077FF" },
     { name: "ЮТУБ", url: "https://youtube.com/towuk", color: "#FF0000" }
+  ]
+};
+
+// Реферальные ссылки и промокоды
+const REFERRALS = {
+  "Т-Банк": [
+    { name: "Дебетовая карта BLACK", bonus: "+ 500 ₽", url: "https://tbank.ru/baf/67H2pYaYn58" },
+    { name: "Кредитная карта PLATINUM", bonus: "0 ₽ обслуживание", url: "https://tbank.ru/baf/8LHOzqc6CBW" },
+    { name: "Т-Мобайл связь", bonus: "+ 500 бонусов", url: "https://tbank.ru/baf/AX9euwZjH1G" }
+  ],
+  "Альфа Банк": [
+    { name: "Дебетовая карта", bonus: "Кэшбэк до 100%", url: "https://alfa.me/TxwIDc" },
+    { name: "Кредитная карта", bonus: "Кэшбэк", url: "https://alfa.me/neW4Vr" },
+    { name: "Самозанятость с Альфа-Картой", bonus: "+ 1000 ₽", url: "https://alfa.me/DWZeox" },
+    { name: "Альфа-Стикер", bonus: "+ 500 ₽", url: "https://alfa.me/tQsXTN" }
+  ],
+  "ВТБ": [
+    { name: "Дебетовая карта", bonus: "+ 1300 ₽", url: "https://vtb.ru/l/akx7cc2a" },
+    { name: "Кредитная карта", bonus: "+ 1000 ₽", url: "https://vtb.ru/l/6xcahck2" },
+    { name: "Накопительный счет", bonus: "+ 2000 ₽", url: "https://vtb.ru/l/72pb77e2" }
+  ],
+  "Хостинг и Домены": [
+    { name: "Selectel (VPS/VDS)", bonus: "Бонусы", url: "https://selectel.ru/?ref_code=11d60a27f4" },
+    { name: "REG.RU — Главная", url: "https://www.reg.ru/?rlink=reflink-32239749" },
+    { name: "REG.RU — Домены", url: "https://www.reg.ru/domain/new/?rlink=reflink-32239749" },
+    { name: "REG.RU — Хостинг", url: "https://www.reg.ru/hosting/?rlink=reflink-32239749" },
+    { name: "REG.RU — Облачные серверы", url: "https://reg.cloud/cloud/servers/?rlink=reflink-32239749" },
+    { name: "REG.RU — Выделенные серверы", url: "https://reg.cloud/dedicated/?rlink=reflink-32239749" }
+  ],
+  "Промокоды REG.RU": [
+    { name: "Скидочный промокод", bonus: "5DBA-5D89-E1DA-7892", code: "5DBA-5D89-E1DA-7892" },
+    { name: "Партнерский код", bonus: "B840-4D45-5D2C-19B4", code: "B840-4D45-5D2C-19B4" }
   ]
 };
 </script>
@@ -109,6 +182,17 @@ const SITE_CONFIG = {
     <div class="tags" id="tags"></div>
   </div>
   <div class="links-grid reveal" id="linksGrid"></div>
+  <button class="btn-ref reveal" id="openModalBtn">Поддержать рефералками</button>
+</div>
+
+<!-- Модальное окно -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <button class="modal-close" id="closeModalBtn">×</button>
+    <div class="modal-title">Поддержка рефералками</div>
+    <div class="modal-desc">Не финансовая поддержка проекту. Регистрируй продукты по ссылкам, и мы оба получим бонусы!</div>
+    <div id="modalBody"></div>
+  </div>
 </div>
 
 <script>
@@ -117,6 +201,7 @@ const SITE_CONFIG = {
   $('sub').textContent = SITE_CONFIG.sub;
   $('tags').textContent = SITE_CONFIG.tags;
 
+  // Генерация главных кнопок
   const grid = $('linksGrid');
   SITE_CONFIG.links.forEach(link => {
     const a = document.createElement('a');
@@ -127,6 +212,50 @@ const SITE_CONFIG = {
     a.style.setProperty('--hc', link.color);
     a.innerHTML = `<span>${link.name}</span>`;
     grid.appendChild(a);
+  });
+
+  // Генерация рефералок
+  const modalBody = $('modalBody');
+  for (const [category, items] of Object.entries(REFERRALS)) {
+    let html = `<div class="ref-cat">${category}</div>`;
+    items.forEach(item => {
+      if (item.url) {
+        html += `<a href="${item.url}" target="_blank" rel="noopener noreferrer" class="ref-item">
+          <span class="ref-name">${item.name}</span>
+          ${item.bonus ? `<span class="ref-bonus">${item.bonus}</span>` : ''}
+        </a>`;
+      } else if (item.code) {
+        html += `<div class="ref-item ref-code" data-code="${item.code}">
+          <span class="ref-name">${item.name}</span>
+          <span class="ref-bonus code">${item.bonus}</span>
+        </div>`;
+      }
+    });
+    modalBody.innerHTML += html;
+  }
+
+  // Управление модальным окном
+  const modalBg = $('modalBg');
+  $('openModalBtn').addEventListener('click', () => modalBg.classList.add('active'));
+  $('closeModalBtn').addEventListener('click', () => modalBg.classList.remove('active'));
+  modalBg.addEventListener('click', e => { if(e.target === modalBg) modalBg.classList.remove('active'); });
+
+  // Логика копирования промокодов
+  document.querySelectorAll('.ref-code').forEach(el => {
+    el.addEventListener('click', async () => {
+      try {
+        const code = el.getAttribute('data-code');
+        await navigator.clipboard.writeText(code);
+        const bonusEl = el.querySelector('.ref-bonus');
+        el.classList.add('copied');
+        const originalText = bonusEl.textContent;
+        bonusEl.textContent = 'Скопировано!';
+        setTimeout(() => {
+          el.classList.remove('copied');
+          bonusEl.textContent = originalText;
+        }, 1500);
+      } catch (e) {}
+    });
   });
 </script>
 </body>
